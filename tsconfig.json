@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es2015",
+        "lib": ["es5", "es6", "es2015", "dom", "esnext.asynciterable"],
+        "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "resolveJsonModule": true,
+        "allowJs": true,
+        "outDir": "./resources/js/dist",
+        "esModuleInterop": true
+    },
+    "include": ["resources/js/**/*.ts", "webpack.mix.js"],
+    "exclude": ["node_modules", "bower_components"]
+}

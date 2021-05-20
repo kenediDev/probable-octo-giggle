@@ -1,0 +1,126 @@
+.auth {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    form {
+        .field {
+            margin-bottom: 15px;
+        }
+        #field-text {
+            width: 400px;
+            display: flex;
+            flex-direction: column;
+            .field-title {
+                font-weight: bold;
+            }
+            .field-sub-title {
+                font-weight: bold;
+            }
+        }
+        #field-input {
+            width: 400px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+            -webkit-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+            -moz-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+            background-color: white;
+            overflow: hidden;
+            border-radius: 15px;
+            transition: 500ms ease-in-out;
+            &:hover {
+                border: solid 1px rgb(0, 171, 85);
+            }
+            .field-icon {
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            input {
+                width: 100%;
+                height: 100%;
+                border: none;
+                outline: none;
+            }
+        }
+        #field-button {
+            width: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            button {
+                border: none;
+                outline: none;
+                width: 100%;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 15px;
+                background-color: rgb(0, 171, 85);
+                color: white;
+                font-weight: bold;
+                font-family: "Roboto", sans-serif;
+            }
+            a {
+                text-decoration: none;
+                margin-top: 15px;
+                font-weight: bold;
+                color: rgb(0, 171, 85);
+                font-family: "Roboto", sans-serif;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 899px) {
+    .grids {
+        .cols {
+            height: 100vh;
+            width: 100%;
+            &:first-child {
+                display: none;
+                visibility: hidden;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 443px) {
+    .auth {
+        form {
+            #field-input {
+                width: 300px;
+            }
+            #field-text {
+                width: 300px;
+            }
+            #field-button {
+                width: 300px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 341px) {
+    .auth {
+        form {
+            width: 240px;
+            #field-input {
+                width: 100%;
+            }
+            #field-text {
+                width: 100%;
+            }
+            #field-button {
+                width: 100%;
+            }
+        }
+    }
+}
