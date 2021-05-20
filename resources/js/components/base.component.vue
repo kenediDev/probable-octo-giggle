@@ -3,6 +3,7 @@
     <navbar
       v-if="navbarActive"
       :logo="logo"
+      :token="token"
       v-on:clickRouter="clickRouter($event)"
     />
     <router-view
@@ -35,6 +36,7 @@ import { mapGetters } from "vuex";
 export default class BaseComponent extends Vue {
   logo: string = `http://${window.location.host}/images/Tanpa judul (5).png`;
   navbarActive: boolean = true;
+  token: string = "";
 
   clickRouter(args: { url: string; params: string }) {
     if (args.url) {
@@ -60,6 +62,11 @@ export default class BaseComponent extends Vue {
     } else {
       this.navbarActive = true;
     }
+    if (localStorage.getItem("token")) {
+      this.token = localStorage.getItem("token");
+    } else {
+      this.token = "";
+    }
   }
 
   beforeUpdate() {
@@ -68,6 +75,7 @@ export default class BaseComponent extends Vue {
 
   beforeMount() {
     this.circleLife();
+    this.$store.dispatch("listProduct");
   }
 }
 </script>
@@ -76,6 +84,8 @@ export default class BaseComponent extends Vue {
 <style lang="scss" scoped>
 @import url("https://use.fontawesome.com/releases/v5.15.3/css/all.css");
 @import url("https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Slab&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Public+Sans:wght@700&display=swap");
 // font-family: 'Roboto', sans-serif;
 // font-family: 'Roboto Slab', serif;
+// font-family: 'Public Sans', sans-serif;
 </style>

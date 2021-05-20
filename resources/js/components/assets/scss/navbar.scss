@@ -1,3 +1,88 @@
+.navbar-top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0px 10px 0px;
+    background-color: white;
+    .groups {
+        display: flex;
+        .button {
+            margin-left: 15px;
+            display: flex;
+            .icons {
+                width: 40px;
+                height: 40px;
+                background-color: white;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-right: 15px;
+                box-shadow: rgb(145 158 171 / 12%) -20px 20px 40px 0px;
+                -webkit-box-shadow: rgb(145 158 171 / 12%) -20px 20px 40px 0px;
+                -moz-box-shadow: rgb(145 158 171 / 12%) -20px 20px 40px 0px;
+                .icon {
+                    width: 25px;
+                    height: 25px;
+                }
+            }
+            .group {
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+                text-transform: capitalize !important;
+                span {
+                    &:first-child {
+                        font-weight: bold;
+                        font-family: "Roboto Slab", serif;
+                    }
+                    &:last-child {
+                        color: #0000009e;
+                    }
+                }
+                .capitalize {
+                    text-transform: capitalize;
+                }
+            }
+            #address {
+                font-family: "Roboto", sans-serif;
+                width: 400px;
+                height: 90px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 705px) {
+    .navbar-top {
+        .groups {
+            flex-direction: column;
+            .button {
+                align-items: initial !important;
+                margin: 0 !important;
+            }
+            #address {
+                margin-top: 10px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 477px) {
+    .navbar-top {
+        .groups {
+            .button {
+                #address {
+                    width: 100%;
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+}
+
+// Navbar
+
 .navbar {
     height: 80px;
     display: flex;
@@ -7,6 +92,9 @@
     box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
     -webkit-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
     -moz-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
     img {
         height: 100%;
         background-size: 100% 100%;
@@ -53,6 +141,9 @@
                 color: white;
             }
         }
+        .dashboard {
+            width: 36px;
+        }
     }
 }
 
@@ -61,7 +152,7 @@
     visibility: hidden;
 }
 
-@media screen and (max-width: 973px) {
+@media screen and (max-width: 1019px) {
     .login-mobile {
         display: flex;
         visibility: visible;

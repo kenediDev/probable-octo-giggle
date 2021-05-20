@@ -1,5 +1,31 @@
 <template>
   <div>
+    <div class="navbar-top">
+      <div class="groups">
+        <div class="button">
+          <span class="icons">
+            <icon :src="phone" class="icon" />
+          </span>
+          <div class="group">
+            <span>Nomor Telepon</span>
+            <span class="phone"> +62 852-6848-8257 </span>
+          </div>
+        </div>
+        <div class="button">
+          <span class="icons">
+            <icon :src="map" class="icon" />
+          </span>
+          <div class="group" id="address">
+            <span>Alamat</span>
+            <span class="capitalize">
+              Mobil Sangkut, Lubuklinggau, Jl Yos Sudarso Kelurahan Watervang
+              Kecamatan Lubukli Bengkel, Watervang, Lubuk Linggau Tim. I, Kota
+              Lubuklinggau, Sumatera Selatan 31628
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="navbar">
       <img :src="logo" alt="" />
       <div class="navbar-group">
@@ -8,11 +34,18 @@
         <a href="">Testimoni</a>
         <a href="">Tentang Kami</a>
         <a href="">Kontak</a>
-        <button @click="clickRouter('loading', 'login')" class="login">
+        <button
+          v-if="!token"
+          @click="clickRouter('loading', 'login')"
+          class="login"
+        >
           <span>Masuk</span>
           <span class="icons">
             <i class="fas fa-arrow-right"></i>
           </span>
+        </button>
+        <button v-else class="dashboard" @click="clickRouter('loading', 'dashboard')">
+          <icon :src="dashboard" class="icon" />
         </button>
         <button class="login-mobile" @click="clickDrawer()">
           <i class="fas fa-bars"></i>
@@ -75,11 +108,15 @@ import about from "./assets/agenda.svg";
 import contact from "./assets/name.svg";
 import login from "./assets/key.svg";
 import arrow from "./assets/left-arrow.svg";
+import map from "./assets/map.svg";
+import phone from "./assets/smartphone.svg";
+import dashboard from './assets/admin.svg'
 
 @Component({})
 export default class NavbarComponent extends Vue {
   active: string = "";
   @Prop(String) logo: string;
+  @Prop(String) token: string;
 
   drawer: number = 0;
 
@@ -90,6 +127,9 @@ export default class NavbarComponent extends Vue {
   contact = contact;
   login = login;
   arrow = arrow;
+  map = map;
+  phone = phone;
+  dashboard = dashboard
 
   @Emit()
   clickRouter(args: string, params: string = null) {

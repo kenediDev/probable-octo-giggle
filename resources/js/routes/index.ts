@@ -4,15 +4,17 @@ import LoginScreen from "../components/screen/login.screen.vue";
 import ForgotScreen from "../components/screen/forgot.screen.vue";
 import HomeScreen from "../components/screen/home.screen.vue";
 import LoadingScreen from "../components/attribute/loading.screen.vue";
+import DashboardScreen from "../components/screen/dashboard.screen.vue";
 
 Vue.use(VueRouter);
 
-type RouteName = "home" | "login" | "forgot" | "loading";
+type RouteName = "home" | "login" | "forgot" | "loading" | "dashboard";
 type RoutePath =
     | "/"
     | "/access-login"
     | "/access-forgot-password"
-    | "/loading/:id";
+    | "/loading/:id"
+    | "/dashboard";
 interface Routes {
     name: RouteName;
     path: RoutePath;
@@ -39,6 +41,11 @@ const routes: Routes[] = [
         name: "loading",
         path: "/loading/:id",
         component: LoadingScreen
+    },
+    {
+        name: "dashboard",
+        path: "/dashboard",
+        component: DashboardScreen
     }
 ];
 
