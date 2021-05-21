@@ -26,7 +26,7 @@ jobs:
             - v1-dependencies-
 
       - run:
-          nam: "Install Dependencies"
+          name: "Install Dependencies"
           command: composer install -n --prefer-dist
 
       - save_cache:
@@ -41,4 +41,4 @@ jobs:
       # run tests with phpunit
       - run:
           name: "Run Unit Tests"
-          command: php artisan test
+          command: ./vendor/bin/phpunit tests/Unit
