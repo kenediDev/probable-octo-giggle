@@ -29,6 +29,10 @@ Route::group([
     Route::post('reset/', [AuthController::class, 'reset']);
     Route::post('update/', [AuthController::class, 'update']);
     Route::get('me/', [AuthController::class, 'me']);
+    Route::post('background/', [AuthController::class, 'addBackground']);
+    Route::delete('background/{id}', [AuthController::class, 'destroyBackground']);
+    Route::post('background/{id}', [AuthController::class, 'updateBackground']);
+    Route::post('update/profile/', [AuthController::class, 'updateProfile']);
 });
 
 Route::group([

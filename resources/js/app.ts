@@ -9,6 +9,8 @@ import "moment/locale/id";
 import VueMoment from "vue-moment";
 import { LMap, LTileLayer, LMarker } from "vue2-leaflet";
 import "leaflet/dist/leaflet.css";
+import VueSmoothScroll from "vue2-smooth-scroll";
+Vue.use(VueSmoothScroll);
 
 Vue.component("l-map", LMap);
 Vue.component("l-tile-layer", LTileLayer);

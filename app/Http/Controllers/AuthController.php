@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
+use App\Models\Background;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -84,16 +85,97 @@ class AuthController extends Controller
         $auth->accounts->save();
         return response()->json([
             'message' => "Profil telah diperbarui",
-            "accounts" => new UserResource($auth)
+            "results" => new UserResource($auth)
         ], 200);
     }
 
     public function me(Request $request)
     {
-        $auth = auth()->user();
+        $auth = User::first();
         if (!$auth) {
             return response()->json(false, 401);
         }
         return response()->json(new UserResource($auth), 200);
+    }
+
+    public function addBackground(Request $request)
+    {
+        $auth = auth()->user();
+        if (!$auth) {
+            return response()->json(false, 401);
+        }
+        $val = Validator::make($request->all(), [
+            'background' => 'required'
+        ]);
+        if ($val->fails()) {
+            return response()->json($val->errors(), 400);
+        }
+        $files = null;
+        if ($request->hasFile("background")) {
+            $files = Storage::disk("upload_public")->put("images/background", $request->file("background"));
+        } else {
+            $files = $request->background;
+        }
+        $create = Background::create([
+            'background' => $files,
+            "accounts_id" => $auth->accounts->id
+        ]);
+        $create->save();
+        return response()->json([
+            'message' => "Background telah ditambah",
+            "results" => $create
+        ], 201);
+    }
+
+    public function destroyBackground(Request $request, $id)
+    {
+        $auth = auth()->user();
+        if (!$auth) {
+            return response()->json(false, 401);
+        }
+        $background = Background::find($id);
+        if (!$background) {
+            return response()->json(['message' => 'Background tidak ditemukan'], 404);
+        }
+        $background->delete();
+        return response()->json(['message' => 'Background telah dihapus'], 200);
+    }
+
+    public function updateBackground(Request $request, $id)
+    {
+        $auth = auth()->user();
+        if (!$auth) {
+            return response()->json(false, 401);
+        }
+        $background = Background::find($id);
+        if (!$background) {
+            return response()->json(['message' => "Background tidak ditemukan"], 404);
+        }
+        $files = null;
+        if ($request->hasFile("background")) {
+            $files = Storage::disk("upload_public")->put("images/background", $request->file("background"));
+        } else {
+            $files = $request->background;
+        };
+        $background->background = $files;
+        $background->save();
+        return response()->json(['message' => "Background telah diperbarui", 'results' => $background], 200);
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $auth = auth()->user();
+        if (!$auth) {
+            return response()->json(false, 401);
+        }
+        $files = null;
+        if ($request->hasFile("avatar")) {
+            $files = Storage::disk("upload_public")->put("images/avatar", $request->file("avatar"));
+        } else {
+            $files = $request->avatar;
+        }
+        $auth->accounts->logo = $files;
+        $auth->accounts->save();
+        return response()->json(['message' => "Profil telah diperbarui", 'results' => new UserResource($auth)], 200);
     }
 }

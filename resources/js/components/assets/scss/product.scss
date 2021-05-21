@@ -18,6 +18,32 @@
     }
 }
 
+.product {
+    #active-h1 {
+        margin-top: 0;
+        padding-bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .box {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+            -webkit-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+            -moz-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+            margin-left: 10px;
+            cursor: pointer;
+            .icon {
+                width: 20px;
+                height: 20px;
+            }
+        }
+    }
+}
+
 .list-choice,
 .another-choice {
     display: flex;
@@ -75,6 +101,40 @@
             font-weight: bold;
             font-family: "Roboto", sans-serif;
             color: #00000087;
+        }
+        .group {
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            button {
+                width: 100px;
+                height: 36px;
+                display: flex;
+                align-items: center;
+                justify-content: space-evenly;
+                border-radius: 10px;
+                box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+                -webkit-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+                -moz-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+                border: none;
+                outline: none;
+                background-color: white;
+                &:first-child {
+                    margin-right: 5px;
+                }
+                &:last-child {
+                    margin-left: 5px;
+                }
+                .icon {
+                    width: 20px;
+                    height: 20px;
+                }
+                span {
+                    font-weight: bold;
+                    font-family: 'Roboto', sans-serif;
+                    font-size: 13px;
+                }
+            }
         }
     }
 }
@@ -144,5 +204,12 @@
                 height: 60px;
             }
         }
+    }
+}
+
+.list-choice,
+.another-choice {
+    #active {
+        margin: 0px 3px 0px 3px;
     }
 }

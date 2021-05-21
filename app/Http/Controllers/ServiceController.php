@@ -36,7 +36,7 @@ class ServiceController extends Controller
             'photo' => $files
         ]);
         $create->save();
-        return response()->json(['message' => 'Service telah dibuat', 'create' => $create], 201);
+        return response()->json(['message' => 'Service telah dibuat', 'results' => $create], 201);
     }
 
     public function destroy(Request $request, $id)
@@ -69,12 +69,16 @@ class ServiceController extends Controller
             return response()->json(['message' => 'Service tidak ditemukan'], 404);
         }
 
-        if ($request->hasFile('photo')) {
-            $check->photo = Storage::disk("upload_public")->put("images/service", $request->file('photo'));
-        };
+        $files = null;
+        if ($request->hasFile("photo")) {
+            $files = Storage::disk("upload_public")->put("images/service", $request->file('photo'));
+        } else {
+            $files = $request->photo;
+        }
+        $check->photo = $files;
         $check->title = $request->title;
         $check->description = $request->description;
         $check->update();
-        return response()->json(['message' => 'Service telah diperbarui', 'create' => $check], 200);
+        return response()->json(['message' => 'Service telah diperbarui', 'results' => $check], 200);
     }
 }

@@ -1,12 +1,17 @@
 .grids {
+    padding-top: 20px;
+    background-color: white;
     display: flex;
     .cols {
         &:first-child {
-            width: 500px;
-            background-color: red;
+            width: 35%;
+            height: 50vh;
+            position: sticky;
+            position: -webkit-sticky;
+            top: 15px;
         }
         &:last-child {
-            width: 80%;
+            width: 65%;
         }
         .rights {
             display: flex;
@@ -81,7 +86,6 @@
         }
         #field-button {
             width: 400px;
-            padding: 0px 10px 0px 10px;
             display: flex;
             align-items: center;
             button {
@@ -99,9 +103,10 @@
                 -moz-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
                 font-weight: bold;
                 font-family: "Roboto Slab", serif;
+                margin-right: 10px;
             }
             .box-icon {
-                margin: 0px 10px 0px 10px;
+                margin: 0px 3px 0px 3px;
                 width: 30px;
                 height: 30px;
                 display: flex;
@@ -183,7 +188,7 @@
 
 .modals-icon,
 .modals-icon-close {
-    position: absolute;
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -279,4 +284,84 @@
     to {
         opacity: 0;
     }
+}
+
+// Background
+
+.background {
+    width: 100%;
+    height: 400px;
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    position: relative;
+    .background-content {
+        width: 98%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: auto;
+        button {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            outline: none;
+            background-color: #ffffff9c;
+            border-radius: 80px;
+            i {
+                font-size: 20px;
+            }
+        }
+    }
+    .group-button {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        display: flex;
+        align-items: center;
+        button {
+            border: none;
+            outline: none;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0px 2px 0px 2px;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+            -webkit-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+            -moz-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+            transition: 500ms ease-in-out;
+            &:hover {
+                background-color: #ffffffcc;
+            }
+            .icon {
+                width: 25px;
+                height: 25px;
+            }
+        }
+    }
+}
+
+.arrow-left {
+    cursor: pointer;
+}
+
+.arrow-left-close {
+    cursor: no-drop;
+}
+
+.arrow-right {
+    cursor: pointer;
+}
+
+.arrow-right {
+    cursor: no-drop;
 }

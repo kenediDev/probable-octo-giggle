@@ -72,6 +72,7 @@
           </div>
         </div>
         <columnright
+          :id="id"
           :title="title"
           :description="description"
           :photo="photo"
@@ -80,6 +81,24 @@
           v-on:changeTitle="changeTitle($event)"
           v-on:changeDescription="changeDescription($event)"
           v-on:changePhoto="changePhoto($event)"
+          :first_name="first_name"
+          :last_name="last_name"
+          :bio="bio"
+          :logos="logos"
+          :logos_url="logos_url"
+          :background="background"
+          :background_url="background_url"
+          v-on:changeFirstName="changeFirstName($event)"
+          v-on:changeLastName="changeLastName($event)"
+          v-on:changeBio="changeBio($event)"
+          v-on:changeAvatar="changeAvatar($event)"
+          v-on:changeBackground="changeBackground($event)"
+          v-on:openModalsNotification="openModalsNotification($event)"
+          v-on:clickModalsProfile="clickModalsProfile($event)"
+          :me="me"
+          v-on:updateService="updateService($event)"
+          :formUpdate="formUpdate"
+          :type="type"
         />
       </div>
     </div>
@@ -98,6 +117,7 @@ import author from "../assets/profile.svg";
 import search from "../assets/search.svg";
 import clock from "../assets/digital-clock.svg";
 import columnright from "./component/column-right.component.vue";
+import { User } from "../../store/types/interface";
 
 @Component({
   components: {
@@ -105,6 +125,7 @@ import columnright from "./component/column-right.component.vue";
   },
 })
 export default class DashboardComponent extends Vue {
+  @Prop(Object) me: User;
   @Prop(String) logo: string;
   service = service;
   vision = vision;
@@ -115,37 +136,94 @@ export default class DashboardComponent extends Vue {
   search = search;
   clock = clock;
 
-  title: string = "";
-  description: string = "";
-  photo: any = null;
-  photo_url: any = null;
+  // Service Form
+  @Prop(Number) id: number;
+  @Prop(String) title: string;
+  @Prop(String) description: string;
+  @Prop() photo: any;
+  @Prop() photo_url: any;
+  @Prop(Boolean) formUpdate: boolean;
+  // Another
+  @Prop(String) type: string;
+
+  @Emit()
+  changePhoto(args: any) {
+    this.$emit("changePhoto", args);
+  }
+
+  @Emit()
+  updateService(args: {
+    id: number;
+    title: string;
+    description: string;
+    photo: string;
+  }) {
+    this.$emit("updateService", args);
+  }
+
+  @Emit()
+  clearInput() {
+    this.$emit("clearInput");
+  }
+
+  // Accounts Form
+  first_name: string = "";
+  last_name: string = "";
+  bio: string = "";
+  logos: any = null; // This is avatar from accounts;
+  logos_url: any = null;
+  background: any = null;
+  background_url: any = null;
+
+  @Emit()
+  clickModalsProfile(args: {
+    first_name: string;
+    last_name: string;
+    bio: string;
+  }) {
+    this.$emit("clickModalsProfile", args);
+  }
+
+  @Emit()
+  openModalsNotification(args: {
+    message: string;
+    pk: number;
+    choice: string;
+  }) {
+    this.$emit("openModalsNotification", args);
+  }
+
+  @Emit()
+  changeTitle(args: any) {
+    this.$emit("changeTitle", args);
+  }
+
+  @Emit()
+  changeDescription(args: any) {
+    this.$emit("changeDescription", args);
+  }
+
+  changeFirstName(args: any) {
+    this.first_name = args.target.value;
+  }
+  changeLastName(args: any) {
+    this.last_name = args.target.value;
+  }
+  changeBio(args: any) {
+    this.bio = args.target.value;
+  }
+  changeAvatar(args: any) {
+    this.logos = args;
+    this.logos_url = URL.createObjectURL(args);
+  }
+  changeBackground(args: any) {
+    this.background = args;
+    this.background_url = URL.createObjectURL(args);
+  }
 
   @Emit()
   clickRouter(args: string, params: string = null) {
     this.$emit("clickRouter", { url: args, params });
-  }
-
-  changePhoto(args: any) {
-    if (args.match(/http/i)) {
-      this.photo = args;
-      this.photo_url = args;
-    } else {
-      const photo = (args as any).files[0];
-      this.photo = photo;
-      this.photo_url = URL.createObjectURL(photo);
-    }
-  }
-  changeTitle(args: any) {
-    this.title = args.target.value;
-  }
-  changeDescription(args: any) {
-    this.description = args.target.value;
-  }
-  clearInput() {
-    this.title = "";
-    this.description = "";
-    this.photo_url = "";
-    this.photo = "";
   }
 
   beforeMount() {

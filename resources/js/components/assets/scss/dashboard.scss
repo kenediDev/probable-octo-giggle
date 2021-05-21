@@ -1,7 +1,6 @@
 .grids {
     display: flex;
     .cols {
-        height: 90vh;
         width: 80%;
         &:first-child {
             width: 300px;
@@ -9,6 +8,11 @@
             box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
             -webkit-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
             -moz-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+            height: 100vh;
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            margin-right: 0.80px;
             .brand-icons {
                 display: flex;
                 align-items: center;
@@ -18,9 +22,6 @@
                     height: 80px;
                 }
             }
-        }
-        &:last-child {
-            margin: 0px 2px 0px 2px;
         }
     }
 }

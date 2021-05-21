@@ -28,14 +28,15 @@
       </div>
     </div>
     <div class="home-content">
-      <product />
+      <product :me="me" v-if="me" v-on:updateService="updateService($event)" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Emit, Prop } from "vue-property-decorator";
+import { User } from "../../store/types/interface";
 import product from "./component/product.component.vue";
 
 @Component({
@@ -46,6 +47,18 @@ import product from "./component/product.component.vue";
 export default class HomeScreen extends Vue {
   background: string =
     "http://static1.squarespace.com/static/5b7eea0f70e802f73c399c2f/t/5ba53265b208fc5e9513b656/1537553006321/car+maintenance.jpg?format=1500w";
+
+  @Prop(Object) me: User;
+
+  @Emit()
+  updateService(args: {
+    id: number;
+    title: string;
+    description: string;
+    photo: string;
+  }) {
+    this.$emit("updateService", args);
+  }
 }
 </script>
 

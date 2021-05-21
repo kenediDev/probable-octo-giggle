@@ -18,7 +18,8 @@ class UserResource extends JsonResource
             "id" => $this->id,
             "name" => $this->name,
             "email" => $this->email,
-            "accounts" => new AccountsResource($this->accounts)
+            "accounts" => new AccountsResource($this->accounts),
+            "service" => ServiceResource::collection($this->service)
         ];
     }
 }

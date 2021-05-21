@@ -16,4 +16,9 @@ class Accounts extends Model
     {
         return $this->hasOne(User::class);
     }
+
+    public function background()
+    {
+        return $this->hasMany(Background::class);
+    }
 }

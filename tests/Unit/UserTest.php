@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Models\Background;
 use App\Models\User;
 use Tests\TestCase;
 use Faker\Factory as Faker;
@@ -60,6 +61,65 @@ class UserTest extends TestCase
             $response = $this->actingAs($user, 'api')->get('/api/v1/auth/me');
             $this->assertNotEquals($response, null);
             $response->assertStatus(200);
+        } else $this->markTestSkipped("User not have data");
+    }
+
+    public function test_user_add_background()
+    {
+        $user = User::first();
+        $faker = Faker::create();
+        if ($user) {
+            $response = $this->actingAs($user, "api")->post("/api/v1/auth/background", [
+                "background" => $faker->imageUrl(),
+            ]);
+            $this->assertNotEquals($response, null);
+            $this->assertEquals($response['message'], "Background telah ditambah");
+            $response->assertStatus(201);
+        } else $this->markTestSkipped("User not have data");
+    }
+
+    public function test_user_destroy_background()
+    {
+        $user = User::first();
+        $background = Background::first();
+        if ($user) {
+            if ($background) {
+                $response = $this->actingAs($user, "api")->delete("/api/v1/auth/background/" . $background->id);
+                $response->assertStatus(200);
+                $this->assertNotEquals($response, null);
+                $this->assertEquals($response['message'], "Background telah dihapus");
+            } else $this->markTestSkipped("Background not have data");
+        } else $this->markTestSkipped("User not have data");
+    }
+
+    public function test_user_update_background()
+    {
+        $user = User::first();
+        $background = Background::first();
+        $faker = Faker::create();
+        if ($user) {
+            if ($background) {
+                $response = $this->actingAs($user, 'api')->post('/api/v1/auth/background/' . $background->id, [
+                    'background' => $faker->imageUrl()
+                ]);
+                $response->assertStatus(200);
+                $this->assertNotEquals($response, null);
+                $this->assertEquals($response['message'], 'Background telah diperbarui');
+            } else $this->markTestSkipped("Background not have data");
+        } else $this->markTestSkipped("User not have data");
+    }
+
+    public function test_user_update_profile()
+    {
+        $user = User::first();
+        $faker = Faker::create();
+        if ($user) {
+            $response  = $this->actingAs($user, 'api')->post('/api/v1/auth/update/profile', [
+                'avatar' => $faker->imageUrl(),
+            ]);
+            $response->assertStatus(200);
+            $this->assertEquals($response['message'], 'Profil telah diperbarui');
+            $this->assertNotEquals($response, null);
         } else $this->markTestSkipped("User not have data");
     }
 }

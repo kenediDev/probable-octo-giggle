@@ -29,20 +29,47 @@ const actions = {
             maxRedirects: 5,
             validateStatus: (status: number) => status >= 201 && status < 300
         });
+    },
+    async destroyService({ commit }: any, args: number) {
+        return await axios.delete(`/api/v1/service/${args}`, {
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Methods": "DELETE",
+                "Access-Control-Allow-Headers":
+                    "Content-Type, Origin, Accepted, X-Requested-With, Authorization",
+                "Access-Control-Allow-Origin": "*",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            },
+            timeout: 865000,
+            responseType: "json",
+            withCredentials: true,
+            maxBodyLength: 2000,
+            maxContentLength: 2000,
+            maxRedirects: 5,
+            validateStatus: (status: number) => status >= 200 && status < 300
+        });
+    },
+    async updateService({ commit }: any, args: { id: number; data: FormData }) {
+        return await axios.post(`/api/v1/service/${args.id}`, args.data, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+                "Access-Control-Allow-Methods": "POST",
+                "Access-Control-Allow-Headers":
+                    "Content-Type, Origin, Accepted, X-Requested-With, Authorization",
+                "Access-Control-Allow-Origin": "*",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            },
+            timeout: 865000,
+            responseType: "json",
+            withCredentials: true,
+            maxBodyLength: 2000,
+            maxContentLength: 2000,
+            maxRedirects: 5,
+            validateStatus: (status: number) => status >= 200 && status < 300
+        });
     }
 };
-const mutations = {
-    createService: (results: ServiceState, args: Service) =>
-        results.service.unshift(args),
-    destroyService: (results: ServiceState, args: number) =>
-        (results.service = results.service.filter(function(x) {
-            return x.id !== args;
-        })),
-    updateService: (results: ServiceState, args: Service) =>
-        (results.service = results.service.map(x =>
-            x.id === args.id ? args : x
-        ))
-};
+const mutations = {};
 const getters = {
     fetchService: (results: ServiceState) => results.service
 };

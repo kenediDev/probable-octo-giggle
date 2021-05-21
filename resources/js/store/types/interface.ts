@@ -4,11 +4,18 @@ export interface Message {
     loading: boolean;
 }
 
-export interface User {
+export interface Background {
     id: number;
-    name: string;
-    email: string;
-    password: string;
+    background: string;
+}
+
+export interface Accounts {
+    id: number;
+    first_name: string;
+    last_name: string;
+    description: string;
+    logo: string;
+    background: Background[];
 }
 
 export interface Service {
@@ -16,6 +23,16 @@ export interface Service {
     title: string;
     description: string;
     photo: string;
+}
+
+export interface User {
+    id: number;
+    name: string;
+    email: string;
+    password: string;
+    accounts?: Accounts;
+    background_list?: any[];
+    service?: Service[];
 }
 
 export interface UserState {
