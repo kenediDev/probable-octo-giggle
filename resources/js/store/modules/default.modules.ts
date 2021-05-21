@@ -35,6 +35,7 @@ const anotherChoice = [
 
 const state = {
     default: [],
+    icon: [],
     choice: [
         {
             name: "Lokasi Strategis",
@@ -99,15 +100,40 @@ const actions = {
             .then((res: AxiosResponse<any>) => {
                 commit("listProduct", res.data);
             });
+    },
+    async listIcon({ commit }: any) {
+        return await axios
+            .get("/api/v1/default/icon", {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Methods": "GET",
+                    "Access-Control-Allow-Headers":
+                        "Content-Type, Origin, Accepted,X-Requested-With",
+                    "Access-Control-Allow-Origin": "*"
+                },
+                timeout: 865000,
+                responseType: "json",
+                withCredentials: false,
+                maxBodyLength: 2000,
+                maxContentLength: 2000,
+                maxRedirects: 5,
+                validateStatus: (status: number) =>
+                    status >= 200 && status < 300
+            })
+            .then((res: AxiosResponse<any>) => {
+                commit("listIcon", res.data);
+            });
     }
 };
 const mutations = {
-    listProduct: (results: any, data: any) => (results.default = data)
+    listProduct: (results: any, data: any) => (results.default = data),
+    listIcon: (results: any, data: any) => (results.icon = data)
 };
 const getters = {
     listProduct: (results: any) => results.default,
     choices: (results: any) => results.choice,
-    anotherChoices: (results: any) => results.anotherChoice
+    anotherChoices: (results: any) => results.anotherChoice,
+    icons: (results: any) => results.icon
 };
 export default {
     state,

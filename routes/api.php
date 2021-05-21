@@ -27,6 +27,8 @@ Route::group([
 ], function () {
     Route::post('', [AuthController::class, 'login']);
     Route::post('reset/', [AuthController::class, 'reset']);
+    Route::post('update/', [AuthController::class, 'update']);
+    Route::get('me/', [AuthController::class, 'me']);
 });
 
 Route::group([
@@ -34,6 +36,7 @@ Route::group([
     'prefix' => 'v1/default'
 ], function () {
     Route::get('', [DefaultController::class, 'listProduct']);
+    Route::get('icon/', [DefaultController::class, 'listIcon']);
 });
 
 

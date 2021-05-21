@@ -11,8 +11,20 @@ export interface User {
     password: string;
 }
 
+export interface Service {
+    id: number;
+    title: string;
+    description: string;
+    photo: string;
+}
+
 export interface UserState {
     user: User[];
     data: User;
     message: Message;
+}
+
+export interface ServiceState {
+    service: Service[];
+    data: Service;
 }

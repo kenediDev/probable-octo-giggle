@@ -19,4 +19,17 @@ class DefaultController extends Controller
         }
         return response()->json($array);
     }
+
+    public function listIcon(Request $request) {
+        $base = base_path() . '/public/images/icon';
+        $scan = scandir($base);
+        $array = array();
+        foreach ($scan as $value) {
+            if (!in_array($value, array('..', '.'))) {
+                $url = "http://" . $request->getHttpHost() . '/images/icon/' . $value;
+                array_push($array, $url);
+            }
+        }
+        return response()->json($array);
+    }
 }

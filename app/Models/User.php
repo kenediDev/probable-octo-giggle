@@ -52,6 +52,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->getKey();
     }
 
+    public function accounts()
+    {
+        return $this->hasOne(Accounts::class);
+    }
+
     public function photo()
     {
         return $this->hasMany(Service::class);

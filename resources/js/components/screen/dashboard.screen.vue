@@ -61,7 +61,7 @@
           </div>
         </div>
         <div class="sub-headers">
-          <button>
+          <button @click="clickRouter('loading', 'home')">
             <span>Kembali</span>
           </button>
           <div class="metadata">
@@ -88,7 +88,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Emit, Prop } from "vue-property-decorator";
 import service from "../assets/maintenance.svg";
 import vision from "../assets/name.svg";
 import testimonials from "../assets/testimonials.svg";
@@ -120,9 +120,20 @@ export default class DashboardComponent extends Vue {
   photo: any = null;
   photo_url: any = null;
 
-  changePhoto(args: string) {
-    this.photo = args;
-    this.photo_url = URL.createObjectURL(args);
+  @Emit()
+  clickRouter(args: string, params: string = null) {
+    this.$emit("clickRouter", { url: args, params });
+  }
+
+  changePhoto(args: any) {
+    if (args.match(/http/i)) {
+      this.photo = args;
+      this.photo_url = args;
+    } else {
+      const photo = (args as any).files[0];
+      this.photo = photo;
+      this.photo_url = URL.createObjectURL(photo);
+    }
   }
   changeTitle(args: any) {
     this.title = args.target.value;
@@ -135,6 +146,10 @@ export default class DashboardComponent extends Vue {
     this.description = "";
     this.photo_url = "";
     this.photo = "";
+  }
+
+  beforeMount() {
+    this.$store.dispatch("listIcon");
   }
 }
 </script>
