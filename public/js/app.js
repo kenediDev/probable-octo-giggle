@@ -5790,6 +5790,20 @@ var mutations = {
   },
   updateServiceTitle: function updateServiceTitle(results, args) {
     results.data.accounts = args.accounts;
+  },
+  // List Cover Information
+  createListInformation: function createListInformation(results, args) {
+    results.data.accounts.cover_information.list_cover_information.unshift(args);
+  },
+  updateListInformation: function updateListInformation(results, args) {
+    results.data.accounts.cover_information.list_cover_information = results.data.accounts.cover_information.list_cover_information.map(function (x) {
+      return x.id === args.id ? args : x;
+    });
+  },
+  destroyListInformation: function destroyListInformation(results, args) {
+    results.data.accounts.cover_information.list_cover_information = results.data.accounts.cover_information.list_cover_information.filter(function (x) {
+      return x.id !== args;
+    });
   }
 };
 var getters = {

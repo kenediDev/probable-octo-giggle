@@ -1,8 +1,15 @@
+export interface ListCoverInformation {
+    id: number;
+    description: string;
+    cover_information?: CoverInformation;
+}
+
 export interface CoverInformation {
     id: number;
     title: string;
     child_title: string;
     description: string;
+    list_cover_information?: ListCoverInformation[];
 }
 
 export interface Message {
@@ -60,4 +67,9 @@ export interface UserBackgroundList {
     data: {
         background_list: any[];
     };
+}
+
+export interface InformationState {
+    information: ListCoverInformation[];
+    data: ListCoverInformation;
 }

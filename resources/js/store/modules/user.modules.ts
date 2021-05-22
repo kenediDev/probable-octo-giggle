@@ -5,6 +5,7 @@ import {
     Message,
     Background,
     Service,
+    ListCoverInformation
 } from "../types/interface";
 
 const state: UserState = {
@@ -249,6 +250,24 @@ const mutations = {
     },
     updateServiceTitle: (results: UserState, args: User) => {
         results.data.accounts = args.accounts;
+    },
+    // List Cover Information
+    createListInformation: (results: UserState, args: ListCoverInformation) => {
+        results.data.accounts.cover_information.list_cover_information.unshift(
+            args
+        );
+    },
+    updateListInformation: (results: UserState, args: ListCoverInformation) => {
+        results.data.accounts.cover_information.list_cover_information = results.data.accounts.cover_information.list_cover_information.map(
+            x => (x.id === args.id ? args : x)
+        );
+    },
+    destroyListInformation: (results: UserState, args: number) => {
+        results.data.accounts.cover_information.list_cover_information = results.data.accounts.cover_information.list_cover_information.filter(
+            function(x) {
+                return x.id !== args;
+            }
+        );
     }
 };
 const getters = {
