@@ -131,7 +131,8 @@ class UserTest extends TestCase
             $response = $this->actingAs($user, 'api')->post('/api/v1/auth/update/information', [
                 'title' => $faker->title(),
                 'child_title' => $faker->jobTitle(),
-                'description' => $faker->text(200)
+                'description' => $faker->text(200),
+                "image" => $faker->imageUrl()
             ]);
             $response->assertStatus(200);
             $this->assertEquals($response['message'], 'Cover informasi telah diperbarui');

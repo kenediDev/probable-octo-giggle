@@ -37,6 +37,7 @@
         v-on:updateService="updateService($event)"
         v-on:updateTitle="updateTitle($event)"
       />
+      <coverInformation />
     </div>
   </div>
 </template>
@@ -47,6 +48,7 @@ import { Component, Emit, Prop, Watch } from "vue-property-decorator";
 import { mapState } from "vuex";
 import { User, UserBackgroundList } from "../../store/types/interface";
 import product from "./component/product.component.vue";
+import coverInformation from "./component/cover_information.component.vue";
 
 @Component({
   data() {
@@ -61,6 +63,7 @@ import product from "./component/product.component.vue";
   },
   components: {
     product,
+    coverInformation,
   },
   computed: {
     ...mapState(["UserModules"]),
