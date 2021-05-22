@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DefaultController;
+use App\Http\Controllers\ListCoverInformationController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -55,4 +56,14 @@ Route::group([
     Route::delete('{id}', [ServiceController::class, 'destroy']);
     Route::post('{id}', [ServiceController::class, 'update']);
     Route::post('active/{id}', [ServiceController::class, 'service_animation']);
+});
+
+
+Route::group([
+    'middleware' => "api",
+    'prefix' => "v1/information"
+], function () {
+    Route::post('', [ListCoverInformationController::class, "create"]);
+    Route::delete("{id}", [ListCoverInformationController::class, 'destroy']);
+    Route::post('{id}', [ListCoverInformationController::class, 'update']);
 });

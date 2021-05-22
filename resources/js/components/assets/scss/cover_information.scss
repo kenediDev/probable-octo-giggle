@@ -1,0 +1,72 @@
+.cover_information {
+    background-color: white;
+    .grids {
+        display: flex;
+        justify-content: center;
+        .cols {
+            width: 40%;
+            height: 70vh;
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            &:last-child {
+                background-color: white;
+                padding: 30px 60px 30px 60px;
+                .title {
+                    font-weight: bold;
+                    text-transform: uppercase;
+                    color: rgb(0, 171, 85);
+                }
+                .child-title {
+                    font-weight: bold;
+                    color: black;
+                    font-size: 18px;
+                }
+            }
+            .group {
+                display: flex;
+                align-items: center;
+                button {
+                    border: none;
+                    outline: none;
+                    width: 120px;
+                    height: 34px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border: solid 1px rgb(0, 171, 85);
+                    background-color: white;
+                    color: rgb(0, 171, 85);
+                    transition: 500ms ease-in-out;
+                    &:hover {
+                        background-color: rgb(0, 171, 85);
+                        color: white;
+                    }
+                    font-weight: bold;
+                    border-radius: 5px;
+                    &:first-child {
+                        margin-right: 10px;
+                    }
+                    &:not(&:first-child) {
+                        margin-right: 10px;
+                    }
+                }
+            }
+            p {
+                color: #808080;
+            }
+            .content {
+                margin: 5px 0px 0px 0px;
+                padding: 10px;
+                border-radius: 5px;
+                background-color: white;
+                box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+                -webkit-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+                -moz-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+                .text {
+                    color: #808080;
+                }
+            }
+        }
+    }
+}

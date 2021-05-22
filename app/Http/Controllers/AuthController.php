@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
 use App\Models\Background;
+use App\Models\ListCoverInformation;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -237,7 +238,7 @@ class AuthController extends Controller
         if ($files) {
             $auth->accounts->cover_information->image = $files;
         }
-        
+
         $auth->accounts->cover_information->title = $request->title;
         $auth->accounts->cover_information->child_title = $request->child_title;
         $auth->accounts->cover_information->description = $request->description;

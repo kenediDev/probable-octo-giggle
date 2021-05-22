@@ -16,4 +16,9 @@ class CoverInformation extends Model
     {
         return $this->hasOne(Accounts::class);
     }
+
+    public function list_cover_information()
+    {
+        return $this->hasMany(ListCoverInformation::class);
+    }
 }
