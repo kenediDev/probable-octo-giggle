@@ -4316,6 +4316,8 @@ __webpack_require__(/*! core-js/modules/es.object.get-own-property-descriptor.js
 
 __webpack_require__(/*! core-js/modules/es.object.define-property.js */ "./node_modules/core-js/modules/es.object.define-property.js");
 
+__webpack_require__(/*! core-js/modules/web.timers.js */ "./node_modules/core-js/modules/web.timers.js");
+
 var __decorate = this && this.__decorate || function (decorators, target, key, desc) {
   var c = arguments.length,
       r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc,
@@ -4344,6 +4346,8 @@ var vue_1 = __importDefault(__webpack_require__(/*! vue */ "./node_modules/vue/d
 
 var vue_property_decorator_1 = __webpack_require__(/*! vue-property-decorator */ "./node_modules/vue-property-decorator/lib/index.js");
 
+var vuex_1 = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+
 var product_component_vue_1 = __importDefault(__webpack_require__(/*! ./component/product.component.vue */ "./resources/js/components/screen/component/product.component.vue"));
 
 var HomeScreen = /*#__PURE__*/function (_vue_1$default) {
@@ -4352,19 +4356,32 @@ var HomeScreen = /*#__PURE__*/function (_vue_1$default) {
   var _super = _createSuper(HomeScreen);
 
   function HomeScreen() {
-    var _this;
-
     _classCallCheck(this, HomeScreen);
 
-    _this = _super.apply(this, arguments);
-    _this.background = "http://static1.squarespace.com/static/5b7eea0f70e802f73c399c2f/t/5ba53265b208fc5e9513b656/1537553006321/car+maintenance.jpg?format=1500w";
-    return _this;
+    return _super.apply(this, arguments);
   }
 
   _createClass(HomeScreen, [{
     key: "updateService",
     value: function updateService(args) {
       this.$emit("updateService", args);
+    }
+  }, {
+    key: "watchCount",
+    value: function watchCount() {
+      var _this = this;
+
+      var length = this.user.data.background_list.length - 1;
+
+      if (length >= 0) {
+        setTimeout(function () {
+          if (_this.count !== 0) {
+            _this.count -= 1;
+          } else if (_this.count !== length) {
+            _this.count += 1;
+          }
+        }, 1000);
+      }
     }
   }]);
 
@@ -4375,9 +4392,33 @@ __decorate([vue_property_decorator_1.Prop(Object), __metadata("design:type", Obj
 
 __decorate([vue_property_decorator_1.Emit(), __metadata("design:type", Function), __metadata("design:paramtypes", [Object]), __metadata("design:returntype", void 0)], HomeScreen.prototype, "updateService", null);
 
+__decorate([vue_property_decorator_1.Watch("count", {
+  immediate: true
+}), __metadata("design:type", Function), __metadata("design:paramtypes", []), __metadata("design:returntype", void 0)], HomeScreen.prototype, "watchCount", null);
+
 HomeScreen = __decorate([vue_property_decorator_1.Component({
+  data: function data() {
+    return {
+      user: {
+        data: {
+          background_list: []
+        }
+      },
+      count: 0
+    };
+  },
   components: {
     product: product_component_vue_1["default"]
+  },
+  computed: Object.assign(Object.assign({}, vuex_1.mapState(["UserModules"])), {
+    getBackgroundList: function getBackgroundList() {
+      var _ = this.UserModules;
+      return _;
+    }
+  }),
+  mounted: function mounted() {
+    var _ = this.getBackgroundList;
+    this.user = _;
   }
 })], HomeScreen);
 exports.default = HomeScreen;
@@ -52679,14 +52720,19 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "home" }, [
-    _c(
-      "div",
-      {
-        staticClass: "home-background",
-        style: "background-image:url(" + _vm.background + ")"
-      },
-      [_vm._m(0)]
-    ),
+    _vm.me.accounts
+      ? _c(
+          "div",
+          {
+            staticClass: "home-background",
+            style:
+              "background-image:url(" +
+              _vm.me.accounts.background[_vm.count].background +
+              ")"
+          },
+          [_vm._m(0)]
+        )
+      : _vm._e(),
     _vm._v(" "),
     _c(
       "div",

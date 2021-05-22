@@ -11,6 +11,8 @@ declare module "vue/types/vue" {
                 };
             };
         };
+        count: number;
+        mode: number;
     }
 }
 

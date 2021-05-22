@@ -47,3 +47,9 @@ export interface ServiceState {
     service: Service[];
     data: Service;
 }
+
+export interface UserBackgroundList {
+    data: {
+        background_list: any[];
+    };
+}

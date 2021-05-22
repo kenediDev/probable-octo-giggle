@@ -1,8 +1,11 @@
 <template>
   <div class="home">
     <div
+      v-if="me.accounts"
       class="home-background"
-      :style="'background-image:url(' + background + ')'"
+      :style="
+        'background-image:url(' + me.accounts.background[count].background + ')'
+      "
     >
       <div class="homes-background">
         <div class="homes-content">
@@ -40,19 +43,40 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Emit, Prop } from "vue-property-decorator";
-import { User } from "../../store/types/interface";
+import { Component, Emit, Prop, Watch } from "vue-property-decorator";
+import { mapState } from "vuex";
+import { User, UserBackgroundList } from "../../store/types/interface";
 import product from "./component/product.component.vue";
 
 @Component({
+  data() {
+    return {
+      user: {
+        data: {
+          background_list: [],
+        },
+      },
+      count: 0,
+    };
+  },
   components: {
     product,
   },
+  computed: {
+    ...mapState(["UserModules"]),
+    getBackgroundList() {
+      const _ = this.UserModules;
+      return _;
+    },
+  },
+  mounted() {
+    const _ = this.getBackgroundList;
+    this.user = _;
+  },
 })
 export default class HomeScreen extends Vue {
-  background: string =
-    "http://static1.squarespace.com/static/5b7eea0f70e802f73c399c2f/t/5ba53265b208fc5e9513b656/1537553006321/car+maintenance.jpg?format=1500w";
-
+  count: number;
+  user: UserBackgroundList;
   @Prop(Object) me: User;
 
   @Emit()
@@ -63,6 +87,20 @@ export default class HomeScreen extends Vue {
     photo: string;
   }) {
     this.$emit("updateService", args);
+  }
+
+  @Watch("count", { immediate: true })
+  watchCount() {
+    const length = this.user.data.background_list.length - 1;
+    if (length >= 0) {
+      setTimeout(() => {
+        if (this.count !== 0) {
+          this.count -= 1;
+        } else if (this.count !== length) {
+          this.count += 1;
+        }
+      }, 1000);
+    }
   }
 }
 </script>
