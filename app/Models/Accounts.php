@@ -21,4 +21,9 @@ class Accounts extends Model
     {
         return $this->hasMany(Background::class);
     }
+
+    public function cover_information()
+    {
+        return $this->hasOne(CoverInformation::class);
+    }
 }

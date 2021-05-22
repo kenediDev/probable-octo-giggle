@@ -17,5 +17,6 @@ class DatabaseSeeder extends Seeder
         \App\Models\Service::factory(1)->create();
         \App\Models\Accounts::factory(1)->create();
         \App\Models\Background::factory(1)->create();
+        \App\Models\CoverInformation::factory(1)->create();
     }
 }

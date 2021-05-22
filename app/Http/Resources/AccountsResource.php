@@ -22,7 +22,8 @@ class AccountsResource extends JsonResource
             "logo" => $this->logo,
             "title_service" => $this->title_service,
             "animation_service" => $this->animation_service,
-            "background" => BackgroundResource::collection($this->background)
+            "background" => BackgroundResource::collection($this->background),
+            "cover_information" => new CoverInformationResource($this->cover_information)
         ];
     }
 }

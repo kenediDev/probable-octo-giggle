@@ -214,4 +214,25 @@ class AuthController extends Controller
         }
         return response()->json(['message' => $message, 'results' => $auth], 200);
     }
+
+    public function updateCoverInformation(Request $request)
+    {
+        $auth = auth()->user();
+        if (!$auth) {
+            return response()->json(false, 401);
+        }
+        $val = Validator::make($request->all(), [
+            'title' => 'required',
+            'child_title' => 'required',
+            'description' => 'required'
+        ]);
+        if ($val->fails()) {
+            return response()->json($val->errors(), 400);
+        }
+        $auth->accounts->cover_information->title = $request->title;
+        $auth->accounts->cover_information->child_title = $request->child_title;
+        $auth->accounts->cover_information->description = $request->description;
+        $auth->accounts->cover_information->save();
+        return response()->json(['message' => "Cover informasi telah diperbarui", 'results' => new UserResource($auth)], 200);
+    }
 }

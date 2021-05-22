@@ -122,4 +122,19 @@ class UserTest extends TestCase
             $this->assertNotEquals($response, null);
         } else $this->markTestSkipped("User not have data");
     }
+
+    public function test_user_update_information()
+    {
+        $user = User::first();
+        $faker = Faker::create();
+        if ($user) {
+            $response = $this->actingAs($user, 'api')->post('/api/v1/auth/update/information', [
+                'title' => $faker->title(),
+                'child_title' => $faker->jobTitle(),
+                'description' => $faker->text(200)
+            ]);
+            $response->assertStatus(200);
+            $this->assertEquals($response['message'], 'Cover informasi telah diperbarui');
+        } else $this->markTestSkipped("User not have data");
+    }
 }

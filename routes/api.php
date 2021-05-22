@@ -35,6 +35,7 @@ Route::group([
     Route::post('update/profile/', [AuthController::class, 'updateProfile']);
     Route::post('title/', [AuthController::class, 'updateTitle']);
     Route::post("animation/", [AuthController::class, "activeAnimation"]);
+    Route::post('update/information/', [AuthController::class, "updateCoverInformation"]);
 });
 
 Route::group([
