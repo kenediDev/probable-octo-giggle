@@ -16,12 +16,14 @@ class ListCoverInformationController extends Controller
             return response()->json(false, 401);
         }
         $val = Validator::make($request->all(), [
+            'name' => 'required',
             'description' => 'required'
         ]);
         if ($val->fails()) {
             return response()->json($val->errors(), 400);
         }
         $create = ListCoverInformation::create([
+            'name' => $request->name,
             'description' => $request->description,
             "cover_information_id" => $auth->accounts->cover_information->id
         ]);
@@ -50,6 +52,7 @@ class ListCoverInformationController extends Controller
             return response()->json(false, 401);
         }
         $val = Validator::make($request->all(), [
+            'name' => 'required',
             'description' => 'required'
         ]);
         if ($val->fails()) {
@@ -59,6 +62,7 @@ class ListCoverInformationController extends Controller
         if (!$check) {
             return response()->json(['message' => "List cover informasi tidak dapat ditemukan"], 404);
         }
+        $check->name = $request->name;
         $check->description = $request->description;
         $check->save();
         return response()->json(['message' => "List cover informasi telah diperbarui", 'results' => $check], 200);

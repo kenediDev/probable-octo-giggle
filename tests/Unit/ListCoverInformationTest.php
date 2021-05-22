@@ -15,6 +15,7 @@ class ListCoverInformationTest extends TestCase
         $faker = Faker::create();
         if ($auth) {
             $response = $this->actingAs($auth, "api")->post("/api/v1/information", [
+                'name' => $faker->name(),
                 'description' => $faker->text(200)
             ]);
             $response->assertStatus(201);
@@ -42,6 +43,7 @@ class ListCoverInformationTest extends TestCase
         if ($auth) {
             if ($information) {
                 $response = $this->actingAs($auth, 'api')->post('/api/v1/information/' . $information->id, [
+                    'name' => $faker->name(),
                     'description' => $faker->text(200)
                 ]);
                 $response->assertStatus(200);
