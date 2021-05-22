@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ListCoverInformationResource;
 use App\Models\ListCoverInformation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -28,7 +29,7 @@ class ListCoverInformationController extends Controller
             "cover_information_id" => $auth->accounts->cover_information->id
         ]);
         $create->save();
-        return response()->json(['message' => "List cover informasi telah dibuat", 'results' => $create], 201);
+        return response()->json(['message' => "List cover informasi telah dibuat", 'results' => new ListCoverInformationResource($create)], 201);
     }
 
     public function destroy(Request $request, $id)

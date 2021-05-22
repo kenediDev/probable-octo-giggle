@@ -130,6 +130,8 @@
           v-on:changeName="changeName($event)"
           :choiceScreen="choiceScreen"
           v-on:clickModalInformation="clickModalInformation($event)"
+          v-on:openModalCoverInformation="openModalCoverInformation()"
+          v-on:clickModalCoverInformation="clickModalCoverInformation($event)"
         />
       </div>
     </div>
@@ -186,6 +188,20 @@ export default class DashboardComponent extends Vue {
   // Another
   @Prop(String) type: string;
   @Prop(String) nameTitle: string;
+
+  @Emit()
+  clickModalCoverInformation(args: {
+    id: number;
+    name: string;
+    description: string;
+  }) {
+    this.$emit("clickModalCoverInformation", args);
+  }
+
+  @Emit()
+  openModalCoverInformation() {
+    this.$emit("openModalCoverInformation");
+  }
 
   @Emit()
   clickModalInformation(args: {

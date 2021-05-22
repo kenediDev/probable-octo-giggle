@@ -10,7 +10,7 @@ class ListCoverInformation extends Model
     use HasFactory;
 
     protected $table = "list_information";
-    protected $fillable = ["description", "cover_information_id"];
+    protected $fillable = ["description", "cover_information_id", "name"];
 
     public function cover_information()
     {

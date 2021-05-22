@@ -66,9 +66,67 @@
                 .text {
                     color: #808080;
                 }
+                .group {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    button {
+                        width: 100px;
+                        height: 34px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-evenly;
+                        border: none;
+                        outline: none;
+                        border-radius: 10px;
+                        background-color: white;
+                        box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+                        -webkit-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+                        -moz-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+                        font-weight: bold;
+                        text-transform: capitalize;
+                        font-family: "Roboto", sans-serif;
+                        font-size: 14px;
+                        &:hover {
+                            background-color: white;
+                            color: rgb(0, 171, 85);
+                        }
+                        .icon {
+                            width: 20px;
+                            height: 20px;
+                        }
+                    }
+                }
             }
         }
     }
+}
+
+.section {
+    width: 100%;
+    border-bottom: solid 2px #00000026;
+    padding-bottom: 5px;
+    button {
+        border: none;
+        outline: none;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+        box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+        -webkit-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+        -moz-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+        .icon {
+            width: 20px;
+            height: 20px;
+        }
+    }
+}
+
+#active-group {
+    margin-top: 10px;
 }
 
 #grids-unactive {

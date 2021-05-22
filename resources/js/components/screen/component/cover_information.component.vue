@@ -38,16 +38,61 @@
           <p>
             {{ me.accounts.cover_information.description }}
           </p>
-          <div class="group">
-            <button>Misi kita</button>
-            <button>Visi Kita</button>
+          <div v-if="active === 'information'" class="section">
+            <button @click="openModalCoverInformation()">
+              <icon :src="edit" class="icon" />
+            </button>
           </div>
-          <div class="content">
+          <div
+            class="group"
+            :id="active === 'information' ? 'active-group' : ''"
+          >
+            <button
+              v-for="(items, index) in me.accounts.cover_information
+                .list_cover_information"
+              :key="index"
+              @click="clickChoiceInformation(index)"
+            >
+              {{ items.name }}
+            </button>
+          </div>
+          <div
+            v-if="me.accounts.cover_information.list_cover_information[choice]"
+            class="content"
+          >
             <div class="text">
-              Far far away, behind the word mountains, far from the countries
-              Vokalia and Consonantia, there live the blind texts. Separated
-              they live in Bookmarksgrove right at the coast of the Semantics, a
-              large language ocean.
+              {{
+                me.accounts.cover_information.list_cover_information[choice]
+                  .description
+              }}
+            </div>
+            <div class="group" v-if="active === 'information'">
+              <button
+                @click="
+                  clickModalCoverInformation(
+                    me.accounts.cover_information.list_cover_information[choice]
+                      .id,
+                    me.accounts.cover_information.list_cover_information[choice]
+                      .name,
+                    me.accounts.cover_information.list_cover_information[choice]
+                      .description
+                  )
+                "
+              >
+                <icon :src="edit" class="icon" />
+                <span>Edit</span>
+              </button>
+              <button
+                @click="
+                  clickDestroy(
+                    me.accounts.cover_information.list_cover_information[choice]
+                      .id
+                  )
+                "
+              >
+                <icon :src="trash" class="icon" />
+                <span> Hapus </span>
+              </button>
             </div>
           </div>
         </div>
@@ -62,14 +107,33 @@ import { Component, Emit, Prop } from "vue-property-decorator";
 import upload from "../../assets/image.svg";
 import edit from "../../assets/edit.svg";
 import { User } from "../../../store/types/interface";
+import trash from "../../assets/garbage.svg";
+import { AxiosResponse } from "axios";
 
 @Component({})
 export default class CoverInformation extends Vue {
+  choice: number = 0;
+
   @Prop(Object) me: User;
+
+  @Emit()
+  clickModalCoverInformation(id: number, name: string, description: string) {
+    this.$emit("clickModalCoverInformation", {
+      id: id,
+      name: name,
+      description: description,
+    });
+  }
+
+  @Emit()
+  openModalCoverInformation() {
+    this.$emit("openModalCoverInformation");
+  }
 
   active: string = "";
   upload = upload;
   edit = edit;
+  trash = trash;
 
   @Emit()
   clickModalInformation(
@@ -82,6 +146,30 @@ export default class CoverInformation extends Vue {
       child_title: child_title,
       description: description,
     });
+  }
+
+  clickChoiceInformation(args: number) {
+    this.choice = args;
+    console.log(args);
+  }
+
+  clickDestroy(args: number) {
+    this.$store
+      .dispatch("destroyListInformation", args)
+      .then((res: AxiosResponse<any>) => {
+        this.$store.commit("message", { message: res.data.message, valid: 1 });
+        this.$store.commit("destroyListInformation", args);
+      })
+      .catch((err) => {
+        if (!err.response.data) {
+          localStorage.clear();
+          window.location.reload();
+        }
+        this.$store.commit("message", {
+          message: err.response.data.message,
+          valid: 2,
+        });
+      });
   }
 
   beforeMount() {

@@ -5,6 +5,7 @@ const state: InformationState = {
     information: [],
     data: {
         id: 0,
+        name: '',
         description: ""
     }
 };

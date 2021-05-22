@@ -1,5 +1,6 @@
 export interface ListCoverInformation {
     id: number;
+    name: string;
     description: string;
     cover_information?: CoverInformation;
 }

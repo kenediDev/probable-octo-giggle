@@ -30,6 +30,8 @@
       :choiceScreen="choiceScreen"
       v-on:clickChoiceScreen="clickChoiceScreen($event)"
       v-on:clickModalInformation="clickModalInformation($event)"
+      v-on:clickModalCoverInformation="clickModalCoverInformation($event)"
+      v-on:openModalCoverInformation="openModalCoverInformation()"
     ></router-view>
     <msg :message="message" />
     <progress_ :message="message" />
@@ -69,6 +71,16 @@
       v-on:changeDescription="changeDescription($event)"
       v-on:clearInput="clearInput()"
     />
+    <modalsCoverInformation
+      :modalsCoverInformation="modalsCoverInformation"
+      v-on:openModalCoverInformation="openModalCoverInformation()"
+      :name="name"
+      :id="id"
+      :description="description"
+      v-on:changeName="changeName($event)"
+      v-on:changeDescription="changeDescription($event)"
+      v-on:clearInput="clearInput()"
+    />
   </div>
 </template>
 
@@ -83,6 +95,7 @@ import modalsNotification from "./attribute/modals.screen.vue";
 import modalsProfile from "./attribute/modals.profile-edit.vue";
 import modalsTitle from "./attribute/modals.title.vue";
 import modalsInformation from "./attribute/modals.information.vue";
+import modalsCoverInformation from "./attribute/modals.cover_information.vue";
 
 @Component({
   components: {
@@ -93,6 +106,7 @@ import modalsInformation from "./attribute/modals.information.vue";
     modalsProfile,
     modalsTitle,
     modalsInformation,
+    modalsCoverInformation,
   },
   computed: {
     ...mapGetters(["message", "me"]),
@@ -129,17 +143,38 @@ export default class BaseComponent extends Vue {
   // Choice Screen
   choiceScreen: string = "information";
   modalInformation: number = 0;
+  modalsCoverInformation: number = 0;
+
+  clickModalCoverInformation(args: {
+    id: number;
+    name: string;
+    description: string;
+  }) {
+    this.id = args.id;
+    this.name = args.name;
+    this.description = args.description;
+    this.modalsCoverInformation = 1;
+  }
+
+  openModalCoverInformation() {
+    if (!this.modalsCoverInformation) {
+      this.modalsCoverInformation = 1;
+    } else if (this.modalsCoverInformation === 1) {
+      this.modalsCoverInformation = 2;
+    } else {
+      this.modalsCoverInformation = 1;
+    }
+  }
 
   clickModalInformation(args: {
     title: string;
     child_title: string;
     description: string;
   }) {
-    this.modalInformation = 1;
+    this.modalsCoverInformation = 1;
     this.name = args.title;
     this.title = args.child_title;
     this.description = args.description;
-    console.log(this.name, this.title, this.description);
   }
 
   openModalsInformation() {
@@ -234,8 +269,10 @@ export default class BaseComponent extends Vue {
     this.photo_url = "";
     this.photo = "";
     this.title = "";
+    this.name = "";
     this.formUpdate = false;
     this.modalInformation = 0;
+    this.modalsCoverInformation = 0;
   }
 
   clickModalUpdateProfile(args: {
