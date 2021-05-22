@@ -67,6 +67,28 @@ const actions = {
             maxRedirects: 5,
             validateStatus: (status: number) => status >= 200 && status < 300
         });
+    },
+    async updateServiceTitle(
+        { commit }: any,
+        args: { title: string; type: string }
+    ) {
+        return await axios.post("/api/v1/auth/title/", args, {
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Methods": "POST",
+                "Access-Control-Allow-Headers":
+                    "Content-Type, Origin, Accepted, X-Requested-With, Authorization",
+                "Access-Control-Allow-Origin": "*",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            },
+            timeout: 865000,
+            responseType: "json",
+            withCredentials: true,
+            maxRedirects: 5,
+            maxContentLength: 2000,
+            maxBodyLength: 2000,
+            validateStatus: (status: number) => status >= 200 && status < 300
+        });
     }
 };
 const mutations = {};

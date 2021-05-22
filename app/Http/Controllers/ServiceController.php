@@ -81,4 +81,19 @@ class ServiceController extends Controller
         $check->update();
         return response()->json(['message' => 'Service telah diperbarui', 'results' => $check], 200);
     }
+
+    public function service_animation(Request $request, $id)
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json(false, 401);
+        }
+        $check = Service::find($id);
+        if (!$check) {
+            return response()->json(['message' => 'Service tidak dapat ditemukan'], 404);
+        }
+        $check->animation = $request->active;
+        $check->save();
+        return response()->json(['message' => 'Service telah dipindahkan ke mode animasi'], 200);
+    }
 }

@@ -10,7 +10,7 @@ class Accounts extends Model
     use HasFactory;
 
     protected $table = "accounts";
-    protected $fillable = ["first_name", "last_name", "description", "logo", "user_id"];
+    protected $fillable = ["first_name", "last_name", "description", "logo", "user_id", 'animation_service'];
 
     public function user()
     {

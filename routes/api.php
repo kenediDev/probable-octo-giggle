@@ -33,6 +33,8 @@ Route::group([
     Route::delete('background/{id}', [AuthController::class, 'destroyBackground']);
     Route::post('background/{id}', [AuthController::class, 'updateBackground']);
     Route::post('update/profile/', [AuthController::class, 'updateProfile']);
+    Route::post('title/', [AuthController::class, 'updateTitle']);
+    Route::post("animation/", [AuthController::class, "activeAnimation"]);
 });
 
 Route::group([
@@ -51,4 +53,5 @@ Route::group([
     Route::post('', [ServiceController::class, 'create']);
     Route::delete('{id}', [ServiceController::class, 'destroy']);
     Route::post('{id}', [ServiceController::class, 'update']);
+    Route::post('active/{id}', [ServiceController::class, 'service_animation']);
 });

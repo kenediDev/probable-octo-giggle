@@ -20,6 +20,8 @@ class AccountsResource extends JsonResource
             "last_name" => $this->last_name,
             "description" => $this->description,
             "logo" => $this->logo,
+            "title_service" => $this->title_service,
+            "animation_service" => $this->animation_service,
             "background" => BackgroundResource::collection($this->background)
         ];
     }

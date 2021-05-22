@@ -1,0 +1,112 @@
+.modals-title,
+.modals-title-close {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #00000054;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    form {
+        background-color: white;
+        box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+        -moz-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+        -webkit-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+        padding: 40px 30px 40px 30px;
+        border-radius: 10px;
+        position: relative;
+        #field-title {
+            font-weight: bold;
+            font-family: "Roboto Slab", serif;
+        }
+        .close {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            border-radius: 10px;
+        }
+        .field {
+            margin-bottom: 15px;
+        }
+        #field-input {
+            width: 500px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            background-color: white;
+            box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+            -moz-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+            -webkit-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+            border-radius: 10px;
+            overflow: hidden;
+            border: solid 2px #0000003d;
+            &:hover {
+                border: solid 2px rgb(0, 171, 85);
+            }
+            input {
+                width: 100%;
+                height: 100%;
+                border: none;
+                outline: none;
+                padding: 0px 15px 0px 15px;
+            }
+        }
+        #field-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            button {
+                width: 120px;
+                height: 34px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: rgb(0, 171, 85);
+                color: white;
+                border-radius: 10px;
+                box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+                -moz-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+                -webkit-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+                border: none;
+                outline: none;
+            }
+        }
+    }
+}
+
+.modals-title {
+    animation: modals 500ms forwards;
+}
+
+.modals-title-close {
+    animation: modals-close 500ms forwards;
+}
+
+.modals-title-hidden {
+    display: none;
+    visibility: hidden;
+}
+
+
+@keyframes modals {
+    from {
+        opacity: 0;
+    } to {
+        opacity: 1;
+    }
+}
+
+@keyframes modals-close {
+    from {
+        opacity: 1;
+    } to {
+        opacity: 0;
+    }
+}

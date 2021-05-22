@@ -18,6 +18,7 @@ class CreateAccountsTable extends Migration
             $table->timestamps();
             $table->string("first_name");
             $table->string("last_name");
+            $table->string("title_service")->nullable(true);
             $table->longText("description");
             $table->binary("logo");
         });

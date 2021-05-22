@@ -178,4 +178,40 @@ class AuthController extends Controller
         $auth->accounts->save();
         return response()->json(['message' => "Profil telah diperbarui", 'results' => new UserResource($auth)], 200);
     }
+
+    public function updateTitle(Request $request)
+    {
+        $auth = auth()->user();
+        if (!$auth) {
+            return response()->json(false, 401);
+        }
+        if ($request->type == "service") {
+            $auth->accounts->title_service = $request->title;
+        }
+        $auth->accounts->save();
+        return response()->json(['message' => 'Informasi telah diperbarui', 'results' => new UserResource($auth)], 200);
+    }
+
+    public function activeAnimation(Request $request)
+    {
+        $auth = auth()->user();
+        if (!$auth) {
+            return response()->json(false, 401);
+        }
+        $message = null;
+        switch ($request->type) {
+            case 'service':
+                $auth->accounts->animation_service = $request->active;
+                $auth->accounts->save();
+                if ($request->active) {
+                    $message = "Animasi telah diaktifkan";
+                } else $message = "Animasi telah dimatikan";
+                break;
+
+            default:
+                # code...
+                break;
+        }
+        return response()->json(['message' => $message], 200);
+    }
 }

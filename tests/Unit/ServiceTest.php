@@ -53,4 +53,30 @@ class ServiceTest extends TestCase
             $response->assertStatus(200);
         } else $this->markTestSkipped("Service not have data");
     }
+
+    public function test_service_active_animation()
+    {
+        $user = User::first();
+        if ($user->accounts) {
+            $response = $this->actingAs($user, 'api')->post('/api/v1/auth/animation/', [
+                'type' => 'service',
+                'active' => !$user->accounts->animation_service
+            ]);
+            $response->assertStatus(200);
+        } else $this->markTestSkipped("Accounts not have data");
+    }
+
+    public function test_service_move_to_animation()
+    {
+        $user = User::first();
+        $service = Service::first();
+        if ($user) {
+            if ($service) {
+                $response = $this->actingAs($user, 'api')->post('/api/v1/service/active/' . $service->id, [
+                    'active' => !$service->animation,
+                ]);
+                $response->assertStatus(200);
+            } else $this->markTestSkipped("Service not have data");
+        } else $this->markTestSkipped("User not have data");
+    }
 }

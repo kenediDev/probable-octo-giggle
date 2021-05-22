@@ -169,6 +169,10 @@
           v-if="me"
           :me="me"
           v-on:updateService="updateService($event)"
+          v-on:updateTitle="updateTitle($event)"
+          :nameTitle="nameTitle"
+          v-on:retrieveTitle="retrieveTitle($event)"
+          v-on:changeName="changeName($event)"
         />
       </div>
     </div>
@@ -262,6 +266,22 @@ export default class ColumnRight extends Vue {
   @Prop() background_url: any;
   // Another
   @Prop(String) type: string;
+  @Prop(String) nameTitle: string;
+
+  @Emit()
+  changeName(args) {
+    this.$emit("changeName", args)
+  }
+
+  @Emit()
+  retrieveTitle(args: { title: string; type: string }) {
+    this.$emit("retrieveTitle", args);
+  }
+
+  @Emit()
+  updateTitle(args: { title: string; type: string }) {
+    this.$emit("updateTitle", args);
+  }
 
   @Emit()
   updateService(args: {
@@ -379,7 +399,6 @@ export default class ColumnRight extends Vue {
       default:
         break;
     }
-    this.service();
   }
 
   service() {
@@ -418,6 +437,7 @@ export default class ColumnRight extends Vue {
             message: res.data.message,
             valid: 1,
           });
+          this.$store.commit("createService", res.data.results)
         })
         .catch((err) => {
           if (!Boolean(err.response.data)) {

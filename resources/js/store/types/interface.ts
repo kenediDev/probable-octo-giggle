@@ -16,6 +16,7 @@ export interface Accounts {
     description: string;
     logo: string;
     background: Background[];
+    title_service?: string;
 }
 
 export interface Service {

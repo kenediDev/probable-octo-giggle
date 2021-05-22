@@ -24,6 +24,9 @@
       :formUpdate="formUpdate"
       :type="type"
       v-on:clearInput="clearInput()"
+      :nameTitle="name"
+      v-on:retrieveTitle="retrieveTitle($event)"
+      v-on:changeName="changeName($event)"
     ></router-view>
     <msg :message="message" />
     <progress_ :message="message" />
@@ -45,6 +48,13 @@
       v-on:changeLastName="changeLastName($event)"
       v-on:changeBio="changeBio($event)"
     />
+    <modalsTitle
+      :modalsTitle_="modalsTitle_"
+      v-on:clickModalsTitle="clickModalsTitle()"
+      :nameTitle="name"
+      :type="type"
+      v-on:changeName="changeName($event)"
+    />
   </div>
 </template>
 
@@ -57,6 +67,7 @@ import progress_ from "./attribute/progress.component.vue";
 import { mapGetters } from "vuex";
 import modalsNotification from "./attribute/modals.screen.vue";
 import modalsProfile from "./attribute/modals.profile-edit.vue";
+import modalsTitle from "./attribute/modals.title.vue";
 
 @Component({
   components: {
@@ -65,6 +76,7 @@ import modalsProfile from "./attribute/modals.profile-edit.vue";
     progress_,
     modalsNotification,
     modalsProfile,
+    modalsTitle,
   },
   computed: {
     ...mapGetters(["message", "me"]),
@@ -74,6 +86,8 @@ export default class BaseComponent extends Vue {
   logo: string = `http://${window.location.host}/images/Tanpa judul (5).png`;
   navbarActive: boolean = true;
   token: string = "";
+  // Name Title
+  name: string = "";
   // Service Form
   id: number = 0;
   title: string = "";
@@ -87,6 +101,7 @@ export default class BaseComponent extends Vue {
   pk: number = 0;
   // Modals Profile
   modalsProfile: number = 0;
+  modalsTitle_: number = 0;
   first_name: string = "";
   last_name: string = "";
   bio: string = "";
@@ -94,6 +109,26 @@ export default class BaseComponent extends Vue {
 
   // Another
   type: string = "service";
+
+  clickModalsTitle() {
+    if (!this.modalsTitle_) {
+      this.modalsTitle_ = 1;
+    } else if (this.modalsTitle_ === 1) {
+      this.modalsTitle_ = 2;
+    } else {
+      this.modalsTitle_ = 1;
+    }
+  }
+
+  changeName(args) {
+    this.name = args.target.value;
+  }
+
+  retrieveTitle(args: { title: string; type: string }) {
+    this.name = args.title;
+    this.type = args.type;
+    this.modalsTitle_ = 1;
+  }
 
   changeTitle(args: any) {
     this.title = args.target.value;
@@ -152,6 +187,7 @@ export default class BaseComponent extends Vue {
     this.description = "";
     this.photo_url = "";
     this.photo = "";
+    this.title = "";
     this.formUpdate = false;
   }
 

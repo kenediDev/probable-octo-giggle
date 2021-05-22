@@ -99,6 +99,9 @@
           v-on:updateService="updateService($event)"
           :formUpdate="formUpdate"
           :type="type"
+          :nameTitle="nameTitle"
+          v-on:retrieveTitle="retrieveTitle($event)"
+          v-on:changeName="changeName($event)"
         />
       </div>
     </div>
@@ -145,6 +148,17 @@ export default class DashboardComponent extends Vue {
   @Prop(Boolean) formUpdate: boolean;
   // Another
   @Prop(String) type: string;
+  @Prop(String) nameTitle: string;
+
+  @Emit()
+  changeName(args) {
+    this.$emit("changeName", args);
+  }
+
+  @Emit()
+  retrieveTitle(args: { title: string; type: string }) {
+    this.$emit("retrieveTitle", args);
+  }
 
   @Emit()
   changePhoto(args: any) {

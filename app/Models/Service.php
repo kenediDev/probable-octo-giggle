@@ -11,7 +11,7 @@ class Service extends Model
 
     protected $table = "service";
     protected $fillable = [
-        "title", "description", "photo", "user_id"
+        "title", "description", "photo", "user_id", "animation"
     ];
 
     public function user()

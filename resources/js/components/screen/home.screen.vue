@@ -28,7 +28,12 @@
       </div>
     </div>
     <div class="home-content">
-      <product :me="me" v-if="me" v-on:updateService="updateService($event)" />
+      <product
+        :me="me"
+        v-if="me"
+        v-on:updateService="updateService($event)"
+        v-on:updateTitle="updateTitle($event)"
+      />
     </div>
   </div>
 </template>

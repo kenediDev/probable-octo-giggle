@@ -194,6 +194,9 @@ const mutations = {
         results.data.service = results.data.service.map(x =>
             x.id === args.id ? args : x
         );
+    },
+    updateServiceTitle: (results: UserState, args: User) => {
+        results.data.accounts = args.accounts;
     }
 };
 const getters = {

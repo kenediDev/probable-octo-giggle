@@ -8,6 +8,7 @@
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
     transition: 500ms ease-in-out;
+    z-index: 1;
     .message-button {
         display: flex;
         align-items: center;
