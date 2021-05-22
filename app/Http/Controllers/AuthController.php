@@ -229,6 +229,15 @@ class AuthController extends Controller
         if ($val->fails()) {
             return response()->json($val->errors(), 400);
         }
+        $files = null;
+        if ($request->hasFile("image")) {
+            $files = Storage::disk("upload_public")->put("images/cover_information", $request->file("image"));
+        } else $files = $request->image;
+
+        if ($files) {
+            $auth->accounts->cover_information->image = $files;
+        }
+        
         $auth->accounts->cover_information->title = $request->title;
         $auth->accounts->cover_information->child_title = $request->child_title;
         $auth->accounts->cover_information->description = $request->description;

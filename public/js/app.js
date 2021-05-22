@@ -5615,6 +5615,44 @@ var actions = {
         }
       }, _callee7);
     }));
+  },
+  updateCoverInformation: function updateCoverInformation(_ref8, args) {
+    var commit = _ref8.commit;
+    return __awaiter(this, void 0, void 0, /*#__PURE__*/_regeneratorRuntime.mark(function _callee8() {
+      return _regeneratorRuntime.wrap(function _callee8$(_context8) {
+        while (1) {
+          switch (_context8.prev = _context8.next) {
+            case 0:
+              _context8.next = 2;
+              return axios_1["default"].post("/api/v1/auth/update/information", args, {
+                headers: {
+                  "Content-Type": "application/json",
+                  "Access-Control-Allow-Methods": "POST",
+                  "Access-Control-Allow-Origin": "*",
+                  "Access-Control-Allow-Headers": "Content-Type, Origin, Accepted, X-Requested-With, Authorization",
+                  Authorization: "Bearer ".concat(localStorage.getItem("token"))
+                },
+                timeout: 865000,
+                responseType: "json",
+                withCredentials: true,
+                maxBodyLength: 2000,
+                maxContentLength: 2000,
+                maxRedirects: 5,
+                validateStatus: function validateStatus(status) {
+                  return status >= 200 && status < 300;
+                }
+              });
+
+            case 2:
+              return _context8.abrupt("return", _context8.sent);
+
+            case 3:
+            case "end":
+              return _context8.stop();
+          }
+        }
+      }, _callee8);
+    }));
   }
 };
 var mutations = {
@@ -5665,6 +5703,9 @@ var mutations = {
   },
   updateActiveProfile: function updateActiveProfile(results, args) {
     results.data.accounts.animation_service = args.accounts.animation_service;
+  },
+  updateCoverInformation: function updateCoverInformation(results, args) {
+    results.data.accounts.cover_information = args.accounts.cover_information;
   },
   // Service Crud
   createService: function createService(results, args) {

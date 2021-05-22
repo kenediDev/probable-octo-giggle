@@ -1,3 +1,10 @@
+export interface CoverInformation {
+    id: number;
+    title: string;
+    child_title: string;
+    description: string;
+}
+
 export interface Message {
     message: string;
     valid: number;
@@ -18,6 +25,7 @@ export interface Accounts {
     background: Background[];
     title_service?: string;
     animation_service: boolean;
+    cover_information?: CoverInformation;
 }
 
 export interface Service {
