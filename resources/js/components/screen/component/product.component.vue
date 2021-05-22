@@ -27,7 +27,11 @@
       :id="active === 'service' ? 'active-list' : ''"
     >
       <div v-for="(items, index) in me.service" :key="index">
-        <div class="choice-card" :id="active === 'service' ? 'active' : ''">
+        <div
+          v-if="!items.animation"
+          class="choice-card"
+          :id="active === 'service' ? 'active' : ''"
+        >
           <div class="choice-sub-card">
             <div class="icons">
               <icon :src="items.photo" class="icon" />
@@ -54,14 +58,27 @@
                 <icon :src="trash" class="icon" />
                 <span>Hapus</span>
               </button>
+              <button
+                class="box-icon"
+                @click="clickMoveProductToAnimation(items.id, items.animation)"
+              >
+                <icon :src="post" class="icon" id="icon" />
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
     <div v-if="active === 'service'" class="another-form">
-      <button class="box-icon" @click="clickAnimation()">
-        <icon :src="activeSwitch ? switchOn : switchOff" class="icon" />
+      <button
+        class="box-icon"
+        @click="clickAnimation()"
+        v-if="getData.data.accounts"
+      >
+        <icon
+          :src="getData.data.accounts.animation_service ? switchOn : switchOff"
+          class="icon"
+        />
       </button>
       <div class="info">
         <icon :src="info" class="icon" />
@@ -70,26 +87,32 @@
           menambahkan informasi service.
         </div>
       </div>
-      <button class="box-icon" id="box-icon">
-        <icon :src="post" class="icon" id="icon" />
-      </button>
     </div>
     <div class="another-choice">
-      <div v-for="(items, index) in anotherChoices" :key="index">
+      <div v-for="(items, index) in me.service" :key="index">
         <div
+          v-if="items.animation"
           class="another-choice-card"
           :id="active === 'service' ? 'another-choice-card-animation' : ''"
         >
           <div class="another-choice-sub-card">
             <div class="icons">
-              <icon :src="items.url" class="icon" />
+              <icon :src="items.photo" class="icon" />
             </div>
             <div class="another-choice-card-title">
-              {{ items.name }}
+              {{ items.title }}
             </div>
             <div class="another-choice-card-description">
               {{ items.description }}
             </div>
+            <button
+              class="box-icon"
+              v-if="active === 'service'"
+              @click="clickMoveProductToAnimation(items.id, items.animation)"
+            >
+              <icon :src="paperbin" class="icon" />
+              <span>Hapus Dari Animasi</span>
+            </button>
           </div>
         </div>
       </div>
@@ -101,7 +124,7 @@
 import { AxiosResponse } from "axios";
 import Vue from "vue";
 import { Component, Emit, Prop } from "vue-property-decorator";
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import { User } from "../../../store/types/interface";
 import edit from "../../assets/edit.svg";
 import trash from "../../assets/garbage.svg";
@@ -109,22 +132,67 @@ import switchOn from "../../assets/switch-on.svg";
 import switchOff from "../../assets/switch-off.svg";
 import info from "../../assets/cursor.svg";
 import post from "../../assets/post.svg";
+import paperbin from "../../assets/paper-bin.svg";
 
 @Component({
+  data() {
+    return {
+      getData: {
+        data: {
+          accounts: {
+            animation_service: false,
+          },
+        },
+      },
+    };
+  },
   computed: {
     ...mapGetters(["listProduct", "choices", "anotherChoices"]),
+    ...mapState(["UserModules"]),
+    getAnimationActive() {
+      const _ = this.UserModules;
+      return _;
+    },
+  },
+  methods: {
+    clickAnimation() {
+      const args = !this.getData.data.accounts.animation_service;
+      this.$store
+        .dispatch("activeAnimation", {
+          type: "service",
+          active: args,
+        })
+        .then((res: AxiosResponse<any>) => {
+          this.$store.commit("message", {
+            message: res.data.message,
+            valid: 1,
+          });
+          this.$store.commit("updateActiveProfile", res.data.results);
+        })
+        .catch((err) => {
+          if (!err.response.data) {
+            localStorage.clear();
+            window.location.reload();
+          }
+          this.$store.commit("message", {
+            message: err.response.data.message,
+            valid: 2,
+          });
+        });
+      this.getData.data.accounts.animation_service = args;
+    },
+  },
+  mounted() {
+    const args = this.getAnimationActive;
+    this.getData = args;
   },
 })
 export default class ProductComponent extends Vue {
   switchOn = switchOn;
   switchOff = switchOff;
   info = info;
-  activeSwitch: boolean = true;
   post = post;
-
-  clickAnimation() {
-    this.activeSwitch = !this.activeSwitch;
-  }
+  paperbin = paperbin;
 
   @Prop(String) nameTitle: string;
   @Emit()
@@ -151,6 +219,28 @@ export default class ProductComponent extends Vue {
   active: string = "";
   edit = edit;
   trash = trash;
+
+  clickMoveProductToAnimation(args: number, animation: boolean) {
+    this.$store
+      .dispatch("activeAnimationService", {
+        id: args,
+        active: animation,
+      })
+      .then((res: AxiosResponse<any>) => {
+        this.$store.commit("message", { message: res.data.message, valid: 1 });
+        this.$store.commit("updateService", res.data.results);
+      })
+      .catch((err) => {
+        if (!err.response.data) {
+          localStorage.clear();
+          window.location.reload();
+        }
+        this.$store.commit("message", {
+          message: err.response.data.message,
+          valid: 2,
+        });
+      });
+  }
 
   clickDestroy(args: number) {
     this.$store

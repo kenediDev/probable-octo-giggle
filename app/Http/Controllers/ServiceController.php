@@ -92,8 +92,12 @@ class ServiceController extends Controller
         if (!$check) {
             return response()->json(['message' => 'Service tidak dapat ditemukan'], 404);
         }
-        $check->animation = $request->active;
+        $check->animation = !$request->active;
+        $message = null;
+        if ($check->animation) {
+            $message = "Service telah dipindahkan ke mode animasi";
+        } else $message = "Service telah dipindahkan ke mode normal";
         $check->save();
-        return response()->json(['message' => 'Service telah dipindahkan ke mode animasi'], 200);
+        return response()->json(['message' => $message, 'results' => $check], 200);
     }
 }

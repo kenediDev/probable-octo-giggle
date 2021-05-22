@@ -3616,6 +3616,8 @@ var cursor_svg_1 = __importDefault(__webpack_require__(/*! ../../assets/cursor.s
 
 var post_svg_1 = __importDefault(__webpack_require__(/*! ../../assets/post.svg */ "./resources/js/components/assets/post.svg"));
 
+var paper_bin_svg_1 = __importDefault(__webpack_require__(/*! ../../assets/paper-bin.svg */ "./resources/js/components/assets/paper-bin.svg"));
+
 var ProductComponent = /*#__PURE__*/function (_vue_1$default) {
   _inherits(ProductComponent, _vue_1$default);
 
@@ -3630,8 +3632,8 @@ var ProductComponent = /*#__PURE__*/function (_vue_1$default) {
     _this.switchOn = switch_on_svg_1["default"];
     _this.switchOff = switch_off_svg_1["default"];
     _this.info = cursor_svg_1["default"];
-    _this.activeSwitch = true;
     _this.post = post_svg_1["default"];
+    _this.paperbin = paper_bin_svg_1["default"];
     _this.active = "";
     _this.edit = edit_svg_1["default"];
     _this.trash = garbage_svg_1["default"];
@@ -3639,11 +3641,6 @@ var ProductComponent = /*#__PURE__*/function (_vue_1$default) {
   }
 
   _createClass(ProductComponent, [{
-    key: "clickAnimation",
-    value: function clickAnimation() {
-      this.activeSwitch = !this.activeSwitch;
-    }
-  }, {
     key: "changeName",
     value: function changeName(args) {
       this.$emit("changeName", args);
@@ -3667,24 +3664,51 @@ var ProductComponent = /*#__PURE__*/function (_vue_1$default) {
       });
     }
   }, {
-    key: "clickDestroy",
-    value: function clickDestroy(args) {
+    key: "clickMoveProductToAnimation",
+    value: function clickMoveProductToAnimation(args, animation) {
       var _this2 = this;
 
-      this.$store.dispatch("destroyService", args).then(function (res) {
+      this.$store.dispatch("activeAnimationService", {
+        id: args,
+        active: animation
+      }).then(function (res) {
         _this2.$store.commit("message", {
           message: res.data.message,
           valid: 1
         });
 
-        _this2.$store.commit("destroyService", args);
+        _this2.$store.commit("updateService", res.data.results);
+      })["catch"](function (err) {
+        if (!err.response.data) {
+          localStorage.clear();
+          window.location.reload();
+        }
+
+        _this2.$store.commit("message", {
+          message: err.response.data.message,
+          valid: 2
+        });
+      });
+    }
+  }, {
+    key: "clickDestroy",
+    value: function clickDestroy(args) {
+      var _this3 = this;
+
+      this.$store.dispatch("destroyService", args).then(function (res) {
+        _this3.$store.commit("message", {
+          message: res.data.message,
+          valid: 1
+        });
+
+        _this3.$store.commit("destroyService", args);
       })["catch"](function (err) {
         if (err.response.data) {
           localStorage.clear();
           window.location.reload();
         }
 
-        _this2.$store.commit("message", {
+        _this3.$store.commit("message", {
           message: err.response.data.message,
           valid: 2
         });
@@ -3720,7 +3744,56 @@ __decorate([vue_property_decorator_1.Emit(), __metadata("design:type", Function)
 __decorate([vue_property_decorator_1.Prop(Object), __metadata("design:type", Object)], ProductComponent.prototype, "me", void 0);
 
 ProductComponent = __decorate([vue_property_decorator_1.Component({
-  computed: Object.assign({}, vuex_1.mapGetters(["listProduct", "choices", "anotherChoices"]))
+  data: function data() {
+    return {
+      getData: {
+        data: {
+          accounts: {
+            animation_service: false
+          }
+        }
+      }
+    };
+  },
+  computed: Object.assign(Object.assign(Object.assign({}, vuex_1.mapGetters(["listProduct", "choices", "anotherChoices"])), vuex_1.mapState(["UserModules"])), {
+    getAnimationActive: function getAnimationActive() {
+      var _ = this.UserModules;
+      return _;
+    }
+  }),
+  methods: {
+    clickAnimation: function clickAnimation() {
+      var _this4 = this;
+
+      var args = !this.getData.data.accounts.animation_service;
+      this.$store.dispatch("activeAnimation", {
+        type: "service",
+        active: args
+      }).then(function (res) {
+        _this4.$store.commit("message", {
+          message: res.data.message,
+          valid: 1
+        });
+
+        _this4.$store.commit("updateActiveProfile", res.data.results);
+      })["catch"](function (err) {
+        if (!err.response.data) {
+          localStorage.clear();
+          window.location.reload();
+        }
+
+        _this4.$store.commit("message", {
+          message: err.response.data.message,
+          valid: 2
+        });
+      });
+      this.getData.data.accounts.animation_service = args;
+    }
+  },
+  mounted: function mounted() {
+    var args = this.getAnimationActive;
+    this.getData = args;
+  }
 })], ProductComponent);
 exports.default = ProductComponent;
 
@@ -5099,6 +5172,44 @@ var actions = {
         }
       }, _callee4);
     }));
+  },
+  activeAnimationService: function activeAnimationService(_ref5, args) {
+    var commit = _ref5.commit;
+    return __awaiter(this, void 0, void 0, /*#__PURE__*/_regeneratorRuntime.mark(function _callee5() {
+      return _regeneratorRuntime.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              _context5.next = 2;
+              return axios_1["default"].post("/api/v1/service/active/".concat(args.id), args, {
+                headers: {
+                  "Content-Type": "application/json",
+                  "Access-Control-Allow-Methods": "POST",
+                  "Access-Control-Allow-Headers": "Content-Type, Origin, Accepted, X-Requested-With, Authorization",
+                  "Access-Control-Allow-Origin": "*",
+                  Authorization: "Bearer ".concat(localStorage.getItem("token"))
+                },
+                timeout: 856000,
+                responseType: "json",
+                withCredentials: true,
+                maxRedirects: 5,
+                maxContentLength: 2000,
+                maxBodyLength: 2000,
+                validateStatus: function validateStatus(status) {
+                  return status >= 200 && status < 300;
+                }
+              });
+
+            case 2:
+              return _context5.abrupt("return", _context5.sent);
+
+            case 3:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5);
+    }));
   }
 };
 var mutations = {};
@@ -5425,6 +5536,44 @@ var actions = {
         }
       }, _callee6);
     }));
+  },
+  activeAnimation: function activeAnimation(_ref7, args) {
+    var commit = _ref7.commit;
+    return __awaiter(this, void 0, void 0, /*#__PURE__*/_regeneratorRuntime.mark(function _callee7() {
+      return _regeneratorRuntime.wrap(function _callee7$(_context7) {
+        while (1) {
+          switch (_context7.prev = _context7.next) {
+            case 0:
+              _context7.next = 2;
+              return axios_1["default"].post("/api/v1/auth/animation/", args, {
+                headers: {
+                  "Content-Type": "application/json",
+                  "Access-Control-Allow-Methods": "POST",
+                  "Access-Control-Allow-Origin": "*",
+                  "Access-Control-Allow-Headers": "Content-Type, Origin, Accepted, X-Requested-With, Authorization",
+                  Authorization: "Bearer ".concat(localStorage.getItem("token"))
+                },
+                timeout: 865000,
+                responseType: "json",
+                withCredentials: true,
+                maxBodyLength: 2000,
+                maxContentLength: 2000,
+                maxRedirects: 5,
+                validateStatus: function validateStatus(status) {
+                  return status >= 200 && status < 300;
+                }
+              });
+
+            case 2:
+              return _context7.abrupt("return", _context7.sent);
+
+            case 3:
+            case "end":
+              return _context7.stop();
+          }
+        }
+      }, _callee7);
+    }));
   }
 };
 var mutations = {
@@ -5472,6 +5621,9 @@ var mutations = {
   },
   updateProfile: function updateProfile(results, args) {
     results.data.accounts.logo = args.accounts.logo;
+  },
+  updateActiveProfile: function updateActiveProfile(results, args) {
+    results.data.accounts.animation_service = args.accounts.animation_service;
   },
   // Service Crud
   createService: function createService(results, args) {
@@ -11058,7 +11210,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".product[data-v-3a072614] {\n  padding-top: 30px;\n  padding-bottom: 30px;\n}\n.product h1[data-v-3a072614] {\n  margin-top: 30px;\n  text-align: center;\n  cursor: default;\n  text-transform: capitalize;\n  font-family: \"Public Sans\", sans-serif;\n  font-weight: bold;\n  padding-bottom: 60px;\n}\n.product .list-product[data-v-3a072614] {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  flex-wrap: wrap;\n}\n.product #active-h1[data-v-3a072614] {\n  margin-top: 0;\n  padding-bottom: 0;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.product #active-h1 .box[data-v-3a072614] {\n  width: 40px;\n  height: 40px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  -webkit-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  -moz-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  margin-left: 10px;\n  cursor: pointer;\n}\n.product #active-h1 .box .icon[data-v-3a072614] {\n  width: 20px;\n  height: 20px;\n}\n.list-choice[data-v-3a072614],\n.another-choice[data-v-3a072614] {\n  display: flex;\n  flex-wrap: wrap;\n  justify-content: center;\n  padding-bottom: 30px;\n  padding-top: 60px;\n}\n.list-choice .choice-card[data-v-3a072614],\n.list-choice .another-choice-card[data-v-3a072614],\n.another-choice .choice-card[data-v-3a072614],\n.another-choice .another-choice-card[data-v-3a072614] {\n  padding: 10px;\n  background-color: #06060608;\n  margin: 5px 20px 5px 20px;\n  border-radius: 10px;\n  width: 340px;\n  height: 400px;\n  box-shadow: rgba(145, 158, 171, 0.4) 50px 0px 90px 0px;\n  -webkit-box-shadow: rgba(145, 158, 171, 0.4) 50px 0px 90px 0px;\n  -moz-box-shadow: rgba(145, 158, 171, 0.4) 50px 0px 90px 0px;\n}\n.list-choice .choice-card .choice-sub-card[data-v-3a072614],\n.list-choice .choice-card .another-choice-sub-card[data-v-3a072614],\n.list-choice .another-choice-card .choice-sub-card[data-v-3a072614],\n.list-choice .another-choice-card .another-choice-sub-card[data-v-3a072614],\n.another-choice .choice-card .choice-sub-card[data-v-3a072614],\n.another-choice .choice-card .another-choice-sub-card[data-v-3a072614],\n.another-choice .another-choice-card .choice-sub-card[data-v-3a072614],\n.another-choice .another-choice-card .another-choice-sub-card[data-v-3a072614] {\n  border-radius: 10px;\n  background-color: white;\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  height: 100%;\n  flex-direction: column;\n  padding: 0px 10px 0px 10px;\n}\n.list-choice .choice-card .choice-sub-card .icons[data-v-3a072614],\n.list-choice .choice-card .another-choice-sub-card .icons[data-v-3a072614],\n.list-choice .another-choice-card .choice-sub-card .icons[data-v-3a072614],\n.list-choice .another-choice-card .another-choice-sub-card .icons[data-v-3a072614],\n.another-choice .choice-card .choice-sub-card .icons[data-v-3a072614],\n.another-choice .choice-card .another-choice-sub-card .icons[data-v-3a072614],\n.another-choice .another-choice-card .choice-sub-card .icons[data-v-3a072614],\n.another-choice .another-choice-card .another-choice-sub-card .icons[data-v-3a072614] {\n  width: 60px;\n  height: 60px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: white;\n  box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  -webkit-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  -moz-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  border-radius: 15px;\n}\n.list-choice .choice-card .choice-sub-card .icons .icon[data-v-3a072614],\n.list-choice .choice-card .another-choice-sub-card .icons .icon[data-v-3a072614],\n.list-choice .another-choice-card .choice-sub-card .icons .icon[data-v-3a072614],\n.list-choice .another-choice-card .another-choice-sub-card .icons .icon[data-v-3a072614],\n.another-choice .choice-card .choice-sub-card .icons .icon[data-v-3a072614],\n.another-choice .choice-card .another-choice-sub-card .icons .icon[data-v-3a072614],\n.another-choice .another-choice-card .choice-sub-card .icons .icon[data-v-3a072614],\n.another-choice .another-choice-card .another-choice-sub-card .icons .icon[data-v-3a072614] {\n  width: 40px;\n  height: 40px;\n}\n.list-choice .choice-card .choice-card-title[data-v-3a072614],\n.list-choice .choice-card .another-choice-card-title[data-v-3a072614],\n.list-choice .another-choice-card .choice-card-title[data-v-3a072614],\n.list-choice .another-choice-card .another-choice-card-title[data-v-3a072614],\n.another-choice .choice-card .choice-card-title[data-v-3a072614],\n.another-choice .choice-card .another-choice-card-title[data-v-3a072614],\n.another-choice .another-choice-card .choice-card-title[data-v-3a072614],\n.another-choice .another-choice-card .another-choice-card-title[data-v-3a072614] {\n  text-align: center;\n  font-weight: bold;\n  font-family: \"Roboto\", sans-serif;\n}\n.list-choice .choice-card .choice-card-description[data-v-3a072614],\n.list-choice .choice-card .another-choice-card-description[data-v-3a072614],\n.list-choice .another-choice-card .choice-card-description[data-v-3a072614],\n.list-choice .another-choice-card .another-choice-card-description[data-v-3a072614],\n.another-choice .choice-card .choice-card-description[data-v-3a072614],\n.another-choice .choice-card .another-choice-card-description[data-v-3a072614],\n.another-choice .another-choice-card .choice-card-description[data-v-3a072614],\n.another-choice .another-choice-card .another-choice-card-description[data-v-3a072614] {\n  text-align: center;\n  font-weight: bold;\n  font-family: \"Roboto\", sans-serif;\n  color: #00000087;\n}\n.list-choice .choice-card .group[data-v-3a072614],\n.list-choice .another-choice-card .group[data-v-3a072614],\n.another-choice .choice-card .group[data-v-3a072614],\n.another-choice .another-choice-card .group[data-v-3a072614] {\n  display: flex;\n  align-items: center;\n  justify-content: space-evenly;\n}\n.list-choice .choice-card .group button[data-v-3a072614],\n.list-choice .another-choice-card .group button[data-v-3a072614],\n.another-choice .choice-card .group button[data-v-3a072614],\n.another-choice .another-choice-card .group button[data-v-3a072614] {\n  width: 100px;\n  height: 36px;\n  display: flex;\n  align-items: center;\n  justify-content: space-evenly;\n  border-radius: 10px;\n  box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  -webkit-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  -moz-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  border: none;\n  outline: none;\n  background-color: white;\n}\n.list-choice .choice-card .group button[data-v-3a072614]:first-child,\n.list-choice .another-choice-card .group button[data-v-3a072614]:first-child,\n.another-choice .choice-card .group button[data-v-3a072614]:first-child,\n.another-choice .another-choice-card .group button[data-v-3a072614]:first-child {\n  margin-right: 5px;\n}\n.list-choice .choice-card .group button[data-v-3a072614]:last-child,\n.list-choice .another-choice-card .group button[data-v-3a072614]:last-child,\n.another-choice .choice-card .group button[data-v-3a072614]:last-child,\n.another-choice .another-choice-card .group button[data-v-3a072614]:last-child {\n  margin-left: 5px;\n}\n.list-choice .choice-card .group button .icon[data-v-3a072614],\n.list-choice .another-choice-card .group button .icon[data-v-3a072614],\n.another-choice .choice-card .group button .icon[data-v-3a072614],\n.another-choice .another-choice-card .group button .icon[data-v-3a072614] {\n  width: 20px;\n  height: 20px;\n}\n.list-choice .choice-card .group button span[data-v-3a072614],\n.list-choice .another-choice-card .group button span[data-v-3a072614],\n.another-choice .choice-card .group button span[data-v-3a072614],\n.another-choice .another-choice-card .group button span[data-v-3a072614] {\n  font-weight: bold;\n  font-family: \"Roboto\", sans-serif;\n  font-size: 13px;\n}\n.another-choice[data-v-3a072614] {\n  box-shadow: rgba(145, 158, 171, 0.12) -20px 20px 40px 0px;\n  -webkit-box-shadow: rgba(145, 158, 171, 0.12) -20px 20px 40px 0px;\n  -moz-box-shadow: rgba(145, 158, 171, 0.12) -20px 20px 40px 0px;\n  flex-wrap: nowrap;\n  overflow-x: auto;\n  justify-content: initial;\n  background-color: #ffffff;\n  /* Track */\n  /* Handle */\n  /* Handle on hover */\n}\n.another-choice[data-v-3a072614]::-webkit-scrollbar {\n  width: 1px;\n  height: 1px;\n}\n.another-choice[data-v-3a072614]::-webkit-scrollbar-track {\n  background: #f1f1f1;\n}\n.another-choice[data-v-3a072614]::-webkit-scrollbar-thumb {\n  background: #f1f1f1;\n}\n.another-choice[data-v-3a072614]::-webkit-scrollbar-thumb:hover {\n  background: #f1f1f1;\n}\n.another-choice .another-choice-card[data-v-3a072614] {\n  background-color: #f1fff8c4;\n  -webkit-animation: cars-data-v-3a072614 3s infinite;\n          animation: cars-data-v-3a072614 3s infinite;\n}\n.another-choice:hover #another-choice-card-animation[data-v-3a072614] {\n  -webkit-animation: none;\n          animation: none;\n}\n@-webkit-keyframes cars-data-v-3a072614 {\n0%, 100% {\n    transform: translate(0, 0);\n}\n50% {\n    transform: translate(150px, 0);\n}\n80% {\n    transform: translate(-150px, 0);\n}\n}\n@keyframes cars-data-v-3a072614 {\n0%, 100% {\n    transform: translate(0, 0);\n}\n50% {\n    transform: translate(150px, 0);\n}\n80% {\n    transform: translate(-150px, 0);\n}\n}\n@media screen and (max-width: 418px) {\n.list-choice .choice-card[data-v-3a072614] {\n    width: 100%;\n    margin: 0 !important;\n    margin-bottom: 15px;\n}\n.product[data-v-3a072614] {\n    background-color: white;\n}\n.product .list-product img[data-v-3a072614] {\n    width: 80%;\n    background-size: 100% 100%;\n    background-position: center;\n    background-repeat: no-repeat;\n    height: 60px;\n}\n}\n.list-choice #active[data-v-3a072614],\n.another-choice #active[data-v-3a072614] {\n  margin: 0px 3px 0px 3px;\n}\n#active-list[data-v-3a072614] {\n  height: 100vh;\n  overflow-y: auto;\n  /* Track */\n  /* Handle */\n  /* Handle on hover */\n}\n#active-list[data-v-3a072614]::-webkit-scrollbar {\n  width: 1px;\n}\n#active-list[data-v-3a072614]::-webkit-scrollbar-track {\n  background: #f1f1f1;\n}\n#active-list[data-v-3a072614]::-webkit-scrollbar-thumb:hover {\n  background: #555;\n}\n.another-form[data-v-3a072614] {\n  padding: 20px 0px 20px 0px;\n  display: flex;\n  align-items: center;\n  justify-content: flex-start;\n}\n.another-form .box-icon[data-v-3a072614] {\n  border: none;\n  outline: none;\n  width: 50px;\n  height: 40px;\n  background-color: white;\n  border-radius: 10px;\n  box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  -webkit-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  -moz-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n}\n.another-form .box-icon .icon[data-v-3a072614] {\n  width: 40px;\n  height: 40px;\n}\n.another-form #box-icon[data-v-3a072614] {\n  margin-left: 5px;\n  width: 40px;\n  height: 40px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.another-form #box-icon #icon[data-v-3a072614] {\n  width: 25px;\n  height: 25px;\n}\n.another-form .info[data-v-3a072614] {\n  position: relative;\n  margin: 0px 10px 0px 10px;\n}\n.another-form .info .icon[data-v-3a072614] {\n  width: 22px;\n  height: 22px;\n  cursor: pointer;\n}\n.another-form .info .information[data-v-3a072614] {\n  display: none;\n  visibility: hidden;\n}\n.another-form .info:hover .information[data-v-3a072614] {\n  display: flex;\n  visibility: visible;\n  position: absolute;\n  top: -40px;\n  left: 50%;\n  padding: 10px;\n  border-radius: 10px;\n  transform: translate(-50%, -50%);\n  background-color: white;\n  font-weight: bold;\n  font-family: \"Roboto\", sans-serif;\n  width: 240px;\n  box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  -webkit-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  -moz-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".product[data-v-3a072614] {\n  padding-top: 30px;\n  padding-bottom: 30px;\n}\n.product h1[data-v-3a072614] {\n  margin-top: 30px;\n  text-align: center;\n  cursor: default;\n  text-transform: capitalize;\n  font-family: \"Public Sans\", sans-serif;\n  font-weight: bold;\n  padding-bottom: 60px;\n}\n.product .list-product[data-v-3a072614] {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  flex-wrap: wrap;\n}\n.product #active-h1[data-v-3a072614] {\n  margin-top: 0;\n  padding-bottom: 0;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.product #active-h1 .box[data-v-3a072614] {\n  width: 40px;\n  height: 40px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  -webkit-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  -moz-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  margin-left: 10px;\n  cursor: pointer;\n}\n.product #active-h1 .box .icon[data-v-3a072614] {\n  width: 20px;\n  height: 20px;\n}\n.list-choice[data-v-3a072614],\n.another-choice[data-v-3a072614] {\n  display: flex;\n  flex-wrap: wrap;\n  justify-content: center;\n  padding-bottom: 30px;\n  padding-top: 60px;\n}\n.list-choice .choice-card[data-v-3a072614],\n.list-choice .another-choice-card[data-v-3a072614],\n.another-choice .choice-card[data-v-3a072614],\n.another-choice .another-choice-card[data-v-3a072614] {\n  padding: 10px;\n  background-color: #06060608;\n  margin: 5px 20px 5px 20px;\n  border-radius: 10px;\n  width: 340px;\n  height: 400px;\n  box-shadow: rgba(145, 158, 171, 0.4) 50px 0px 90px 0px;\n  -webkit-box-shadow: rgba(145, 158, 171, 0.4) 50px 0px 90px 0px;\n  -moz-box-shadow: rgba(145, 158, 171, 0.4) 50px 0px 90px 0px;\n}\n.list-choice .choice-card .choice-sub-card[data-v-3a072614],\n.list-choice .choice-card .another-choice-sub-card[data-v-3a072614],\n.list-choice .another-choice-card .choice-sub-card[data-v-3a072614],\n.list-choice .another-choice-card .another-choice-sub-card[data-v-3a072614],\n.another-choice .choice-card .choice-sub-card[data-v-3a072614],\n.another-choice .choice-card .another-choice-sub-card[data-v-3a072614],\n.another-choice .another-choice-card .choice-sub-card[data-v-3a072614],\n.another-choice .another-choice-card .another-choice-sub-card[data-v-3a072614] {\n  border-radius: 10px;\n  background-color: white;\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  height: 100%;\n  flex-direction: column;\n  padding: 0px 10px 0px 10px;\n}\n.list-choice .choice-card .choice-sub-card .icons[data-v-3a072614],\n.list-choice .choice-card .another-choice-sub-card .icons[data-v-3a072614],\n.list-choice .another-choice-card .choice-sub-card .icons[data-v-3a072614],\n.list-choice .another-choice-card .another-choice-sub-card .icons[data-v-3a072614],\n.another-choice .choice-card .choice-sub-card .icons[data-v-3a072614],\n.another-choice .choice-card .another-choice-sub-card .icons[data-v-3a072614],\n.another-choice .another-choice-card .choice-sub-card .icons[data-v-3a072614],\n.another-choice .another-choice-card .another-choice-sub-card .icons[data-v-3a072614] {\n  width: 60px;\n  height: 60px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: white;\n  box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  -webkit-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  -moz-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  border-radius: 15px;\n}\n.list-choice .choice-card .choice-sub-card .icons .icon[data-v-3a072614],\n.list-choice .choice-card .another-choice-sub-card .icons .icon[data-v-3a072614],\n.list-choice .another-choice-card .choice-sub-card .icons .icon[data-v-3a072614],\n.list-choice .another-choice-card .another-choice-sub-card .icons .icon[data-v-3a072614],\n.another-choice .choice-card .choice-sub-card .icons .icon[data-v-3a072614],\n.another-choice .choice-card .another-choice-sub-card .icons .icon[data-v-3a072614],\n.another-choice .another-choice-card .choice-sub-card .icons .icon[data-v-3a072614],\n.another-choice .another-choice-card .another-choice-sub-card .icons .icon[data-v-3a072614] {\n  width: 40px;\n  height: 40px;\n}\n.list-choice .choice-card .choice-card-title[data-v-3a072614],\n.list-choice .choice-card .another-choice-card-title[data-v-3a072614],\n.list-choice .another-choice-card .choice-card-title[data-v-3a072614],\n.list-choice .another-choice-card .another-choice-card-title[data-v-3a072614],\n.another-choice .choice-card .choice-card-title[data-v-3a072614],\n.another-choice .choice-card .another-choice-card-title[data-v-3a072614],\n.another-choice .another-choice-card .choice-card-title[data-v-3a072614],\n.another-choice .another-choice-card .another-choice-card-title[data-v-3a072614] {\n  text-align: center;\n  font-weight: bold;\n  font-family: \"Roboto\", sans-serif;\n}\n.list-choice .choice-card .choice-card-description[data-v-3a072614],\n.list-choice .choice-card .another-choice-card-description[data-v-3a072614],\n.list-choice .another-choice-card .choice-card-description[data-v-3a072614],\n.list-choice .another-choice-card .another-choice-card-description[data-v-3a072614],\n.another-choice .choice-card .choice-card-description[data-v-3a072614],\n.another-choice .choice-card .another-choice-card-description[data-v-3a072614],\n.another-choice .another-choice-card .choice-card-description[data-v-3a072614],\n.another-choice .another-choice-card .another-choice-card-description[data-v-3a072614] {\n  text-align: center;\n  font-weight: bold;\n  font-family: \"Roboto\", sans-serif;\n  color: #00000087;\n}\n.list-choice .choice-card .group[data-v-3a072614],\n.list-choice .another-choice-card .group[data-v-3a072614],\n.another-choice .choice-card .group[data-v-3a072614],\n.another-choice .another-choice-card .group[data-v-3a072614] {\n  display: flex;\n  align-items: center;\n  justify-content: space-evenly;\n}\n.list-choice .choice-card .group button[data-v-3a072614],\n.list-choice .another-choice-card .group button[data-v-3a072614],\n.another-choice .choice-card .group button[data-v-3a072614],\n.another-choice .another-choice-card .group button[data-v-3a072614] {\n  width: 100px;\n  height: 36px;\n  display: flex;\n  align-items: center;\n  justify-content: space-evenly;\n  border-radius: 10px;\n  box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  -webkit-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  -moz-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  border: none;\n  outline: none;\n  background-color: white;\n}\n.list-choice .choice-card .group button[data-v-3a072614]:first-child,\n.list-choice .another-choice-card .group button[data-v-3a072614]:first-child,\n.another-choice .choice-card .group button[data-v-3a072614]:first-child,\n.another-choice .another-choice-card .group button[data-v-3a072614]:first-child {\n  margin-right: 5px;\n}\n.list-choice .choice-card .group button[data-v-3a072614]:last-child,\n.list-choice .another-choice-card .group button[data-v-3a072614]:last-child,\n.another-choice .choice-card .group button[data-v-3a072614]:last-child,\n.another-choice .another-choice-card .group button[data-v-3a072614]:last-child {\n  margin-left: 5px;\n}\n.list-choice .choice-card .group button .icon[data-v-3a072614],\n.list-choice .another-choice-card .group button .icon[data-v-3a072614],\n.another-choice .choice-card .group button .icon[data-v-3a072614],\n.another-choice .another-choice-card .group button .icon[data-v-3a072614] {\n  width: 20px;\n  height: 20px;\n}\n.list-choice .choice-card .group button span[data-v-3a072614],\n.list-choice .another-choice-card .group button span[data-v-3a072614],\n.another-choice .choice-card .group button span[data-v-3a072614],\n.another-choice .another-choice-card .group button span[data-v-3a072614] {\n  font-weight: bold;\n  font-family: \"Roboto\", sans-serif;\n  font-size: 13px;\n}\n.list-choice .choice-card .group .box-icon[data-v-3a072614],\n.list-choice .another-choice-card .group .box-icon[data-v-3a072614],\n.another-choice .choice-card .group .box-icon[data-v-3a072614],\n.another-choice .another-choice-card .group .box-icon[data-v-3a072614] {\n  width: 36px;\n  height: 36px;\n}\n.another-choice[data-v-3a072614] {\n  box-shadow: rgba(145, 158, 171, 0.12) -20px 20px 40px 0px;\n  -webkit-box-shadow: rgba(145, 158, 171, 0.12) -20px 20px 40px 0px;\n  -moz-box-shadow: rgba(145, 158, 171, 0.12) -20px 20px 40px 0px;\n  flex-wrap: nowrap;\n  overflow-x: auto;\n  justify-content: initial;\n  background-color: #ffffff;\n  /* Track */\n  /* Handle */\n  /* Handle on hover */\n}\n.another-choice[data-v-3a072614]::-webkit-scrollbar {\n  width: 1px;\n  height: 1px;\n}\n.another-choice[data-v-3a072614]::-webkit-scrollbar-track {\n  background: #f1f1f1;\n}\n.another-choice[data-v-3a072614]::-webkit-scrollbar-thumb {\n  background: #f1f1f1;\n}\n.another-choice[data-v-3a072614]::-webkit-scrollbar-thumb:hover {\n  background: #f1f1f1;\n}\n.another-choice .another-choice-card[data-v-3a072614] {\n  background-color: #f1fff8c4;\n  -webkit-animation: cars-data-v-3a072614 3s infinite;\n          animation: cars-data-v-3a072614 3s infinite;\n}\n.another-choice:hover #another-choice-card-animation[data-v-3a072614] {\n  -webkit-animation: none;\n          animation: none;\n}\n@-webkit-keyframes cars-data-v-3a072614 {\n0%, 100% {\n    transform: translate(0, 0);\n}\n50% {\n    transform: translate(150px, 0);\n}\n80% {\n    transform: translate(-150px, 0);\n}\n}\n@keyframes cars-data-v-3a072614 {\n0%, 100% {\n    transform: translate(0, 0);\n}\n50% {\n    transform: translate(150px, 0);\n}\n80% {\n    transform: translate(-150px, 0);\n}\n}\n.another-choice-card .box-icon[data-v-3a072614] {\n  width: 180px;\n  height: 32px;\n  border: none;\n  outline: none;\n  background-color: white;\n  border-radius: 10px;\n  display: flex;\n  align-items: center;\n  justify-content: space-evenly;\n  box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  -webkit-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  -moz-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n}\n.another-choice-card .box-icon .icon[data-v-3a072614] {\n  width: 20px;\n  height: 20px;\n}\n.another-choice-card .box-icon span[data-v-3a072614] {\n  font-weight: bold;\n  font-family: \"Roboto\", sans-serif;\n  font-size: 13px;\n  text-transform: capitalize;\n}\n@media screen and (max-width: 418px) {\n.list-choice .choice-card[data-v-3a072614] {\n    width: 100%;\n    margin: 0 !important;\n    margin-bottom: 15px;\n}\n.product[data-v-3a072614] {\n    background-color: white;\n}\n.product .list-product img[data-v-3a072614] {\n    width: 80%;\n    background-size: 100% 100%;\n    background-position: center;\n    background-repeat: no-repeat;\n    height: 60px;\n}\n}\n.list-choice #active[data-v-3a072614],\n.another-choice #active[data-v-3a072614] {\n  margin: 0px 3px 0px 3px;\n}\n#active-list[data-v-3a072614] {\n  height: 100vh;\n  overflow-y: auto;\n  /* Track */\n  /* Handle */\n  /* Handle on hover */\n}\n#active-list[data-v-3a072614]::-webkit-scrollbar {\n  width: 1px;\n}\n#active-list[data-v-3a072614]::-webkit-scrollbar-track {\n  background: #f1f1f1;\n}\n#active-list[data-v-3a072614]::-webkit-scrollbar-thumb:hover {\n  background: #555;\n}\n.another-form[data-v-3a072614] {\n  padding: 20px 0px 20px 0px;\n  display: flex;\n  align-items: center;\n  justify-content: flex-start;\n}\n.another-form .box-icon[data-v-3a072614] {\n  border: none;\n  outline: none;\n  width: 50px;\n  height: 40px;\n  background-color: white;\n  border-radius: 10px;\n  box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  -webkit-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  -moz-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n}\n.another-form .box-icon .icon[data-v-3a072614] {\n  width: 40px;\n  height: 40px;\n}\n.another-form #box-icon[data-v-3a072614] {\n  margin-left: 5px;\n  width: 40px;\n  height: 40px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.another-form #box-icon #icon[data-v-3a072614] {\n  width: 25px;\n  height: 25px;\n}\n.another-form .info[data-v-3a072614] {\n  position: relative;\n  margin: 0px 10px 0px 10px;\n}\n.another-form .info .icon[data-v-3a072614] {\n  width: 22px;\n  height: 22px;\n  cursor: pointer;\n}\n.another-form .info .information[data-v-3a072614] {\n  display: none;\n  visibility: hidden;\n}\n.another-form .info:hover .information[data-v-3a072614] {\n  display: flex;\n  visibility: visible;\n  position: absolute;\n  top: -40px;\n  left: 50%;\n  padding: 10px;\n  border-radius: 10px;\n  transform: translate(-50%, -50%);\n  background-color: white;\n  font-weight: bold;\n  font-family: \"Roboto\", sans-serif;\n  width: 240px;\n  box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  -webkit-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n  -moz-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -11737,6 +11889,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("/images/name.svg?2e938e9ab75f7a50fce1a37fa31b2d83");
+
+/***/ }),
+
+/***/ "./resources/js/components/assets/paper-bin.svg":
+/*!******************************************************!*\
+  !*** ./resources/js/components/assets/paper-bin.svg ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("/images/paper-bin.svg?d73567e5844f49f1092497d031d3b51a");
 
 /***/ }),
 
@@ -51794,87 +51961,113 @@ var render = function() {
           },
           _vm._l(_vm.me.service, function(items, index) {
             return _c("div", { key: index }, [
-              _c(
-                "div",
-                {
-                  staticClass: "choice-card",
-                  attrs: { id: _vm.active === "service" ? "active" : "" }
-                },
-                [
-                  _c("div", { staticClass: "choice-sub-card" }, [
-                    _c(
-                      "div",
-                      { staticClass: "icons" },
-                      [
-                        _c("icon", {
-                          staticClass: "icon",
-                          attrs: { src: items.photo }
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "choice-card-title" }, [
-                      _vm._v(
-                        "\n            " + _vm._s(items.title) + "\n          "
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "choice-card-description" }, [
-                      _vm._v(_vm._s(items.description))
-                    ]),
-                    _vm._v(" "),
-                    _vm.active === "service"
-                      ? _c("div", { staticClass: "group" }, [
-                          _c(
-                            "button",
-                            {
-                              on: {
-                                click: function($event) {
-                                  return _vm.updateService(
-                                    items.id,
-                                    items.title,
-                                    items.description,
-                                    items.photo
-                                  )
-                                }
-                              }
-                            },
-                            [
-                              _c("icon", {
-                                staticClass: "icon",
-                                attrs: { src: _vm.edit }
-                              }),
-                              _vm._v(" "),
-                              _c("span", [_vm._v("Edit")])
-                            ],
-                            1
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "button",
-                            {
-                              on: {
-                                click: function($event) {
-                                  return _vm.clickDestroy(items.id)
-                                }
-                              }
-                            },
-                            [
-                              _c("icon", {
-                                staticClass: "icon",
-                                attrs: { src: _vm.trash }
-                              }),
-                              _vm._v(" "),
-                              _c("span", [_vm._v("Hapus")])
-                            ],
-                            1
+              !items.animation
+                ? _c(
+                    "div",
+                    {
+                      staticClass: "choice-card",
+                      attrs: { id: _vm.active === "service" ? "active" : "" }
+                    },
+                    [
+                      _c("div", { staticClass: "choice-sub-card" }, [
+                        _c(
+                          "div",
+                          { staticClass: "icons" },
+                          [
+                            _c("icon", {
+                              staticClass: "icon",
+                              attrs: { src: items.photo }
+                            })
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "choice-card-title" }, [
+                          _vm._v(
+                            "\n            " +
+                              _vm._s(items.title) +
+                              "\n          "
                           )
-                        ])
-                      : _vm._e()
-                  ])
-                ]
-              )
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "choice-card-description" }, [
+                          _vm._v(_vm._s(items.description))
+                        ]),
+                        _vm._v(" "),
+                        _vm.active === "service"
+                          ? _c("div", { staticClass: "group" }, [
+                              _c(
+                                "button",
+                                {
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.updateService(
+                                        items.id,
+                                        items.title,
+                                        items.description,
+                                        items.photo
+                                      )
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("icon", {
+                                    staticClass: "icon",
+                                    attrs: { src: _vm.edit }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("span", [_vm._v("Edit")])
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.clickDestroy(items.id)
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("icon", {
+                                    staticClass: "icon",
+                                    attrs: { src: _vm.trash }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("span", [_vm._v("Hapus")])
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "box-icon",
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.clickMoveProductToAnimation(
+                                        items.id,
+                                        items.animation
+                                      )
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("icon", {
+                                    staticClass: "icon",
+                                    attrs: { src: _vm.post, id: "icon" }
+                                  })
+                                ],
+                                1
+                              )
+                            ])
+                          : _vm._e()
+                      ])
+                    ]
+                  )
+                : _vm._e()
             ])
           }),
           0
@@ -51883,24 +52076,30 @@ var render = function() {
     _vm._v(" "),
     _vm.active === "service"
       ? _c("div", { staticClass: "another-form" }, [
-          _c(
-            "button",
-            {
-              staticClass: "box-icon",
-              on: {
-                click: function($event) {
-                  return _vm.clickAnimation()
-                }
-              }
-            },
-            [
-              _c("icon", {
-                staticClass: "icon",
-                attrs: { src: _vm.activeSwitch ? _vm.switchOn : _vm.switchOff }
-              })
-            ],
-            1
-          ),
+          _vm.getData.data.accounts
+            ? _c(
+                "button",
+                {
+                  staticClass: "box-icon",
+                  on: {
+                    click: function($event) {
+                      return _vm.clickAnimation()
+                    }
+                  }
+                },
+                [
+                  _c("icon", {
+                    staticClass: "icon",
+                    attrs: {
+                      src: _vm.getData.data.accounts.animation_service
+                        ? _vm.switchOn
+                        : _vm.switchOff
+                    }
+                  })
+                ],
+                1
+              )
+            : _vm._e(),
           _vm._v(" "),
           _c(
             "div",
@@ -51915,18 +52114,6 @@ var render = function() {
               ])
             ],
             1
-          ),
-          _vm._v(" "),
-          _c(
-            "button",
-            { staticClass: "box-icon", attrs: { id: "box-icon" } },
-            [
-              _c("icon", {
-                staticClass: "icon",
-                attrs: { src: _vm.post, id: "icon" }
-              })
-            ],
-            1
           )
         ])
       : _vm._e(),
@@ -51934,47 +52121,81 @@ var render = function() {
     _c(
       "div",
       { staticClass: "another-choice" },
-      _vm._l(_vm.anotherChoices, function(items, index) {
+      _vm._l(_vm.me.service, function(items, index) {
         return _c("div", { key: index }, [
-          _c(
-            "div",
-            {
-              staticClass: "another-choice-card",
-              attrs: {
-                id:
-                  _vm.active === "service"
-                    ? "another-choice-card-animation"
-                    : ""
-              }
-            },
-            [
-              _c("div", { staticClass: "another-choice-sub-card" }, [
-                _c(
-                  "div",
-                  { staticClass: "icons" },
-                  [
-                    _c("icon", {
-                      staticClass: "icon",
-                      attrs: { src: items.url }
-                    })
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: "another-choice-card-title" }, [
-                  _vm._v("\n            " + _vm._s(items.name) + "\n          ")
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "another-choice-card-description" }, [
-                  _vm._v(
-                    "\n            " +
-                      _vm._s(items.description) +
-                      "\n          "
-                  )
-                ])
-              ])
-            ]
-          )
+          items.animation
+            ? _c(
+                "div",
+                {
+                  staticClass: "another-choice-card",
+                  attrs: {
+                    id:
+                      _vm.active === "service"
+                        ? "another-choice-card-animation"
+                        : ""
+                  }
+                },
+                [
+                  _c("div", { staticClass: "another-choice-sub-card" }, [
+                    _c(
+                      "div",
+                      { staticClass: "icons" },
+                      [
+                        _c("icon", {
+                          staticClass: "icon",
+                          attrs: { src: items.photo }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "another-choice-card-title" }, [
+                      _vm._v(
+                        "\n            " + _vm._s(items.title) + "\n          "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "another-choice-card-description" },
+                      [
+                        _vm._v(
+                          "\n            " +
+                            _vm._s(items.description) +
+                            "\n          "
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _vm.active === "service"
+                      ? _c(
+                          "button",
+                          {
+                            staticClass: "box-icon",
+                            on: {
+                              click: function($event) {
+                                return _vm.clickMoveProductToAnimation(
+                                  items.id,
+                                  items.animation
+                                )
+                              }
+                            }
+                          },
+                          [
+                            _c("icon", {
+                              staticClass: "icon",
+                              attrs: { src: _vm.paperbin }
+                            }),
+                            _vm._v(" "),
+                            _c("span", [_vm._v("Hapus Dari Animasi")])
+                          ],
+                          1
+                        )
+                      : _vm._e()
+                  ])
+                ]
+              )
+            : _vm._e()
         ])
       }),
       0

@@ -135,6 +135,10 @@
                     font-size: 13px;
                 }
             }
+            .box-icon {
+                width: 36px;
+                height: 36px;
+            }
         }
     }
 }
@@ -187,6 +191,33 @@
     }
     80% {
         transform: translate(-150px, 0);
+    }
+}
+
+.another-choice-card {
+    .box-icon {
+        width: 180px;
+        height: 32px;
+        border: none;
+        outline: none;
+        background-color: white;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+        -webkit-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+        -moz-box-shadow: 0px 0px 10px -7px rgba(0, 0, 0, 0.75);
+        .icon {
+            width: 20px;
+            height: 20px;
+        }
+        span {
+            font-weight: bold;
+            font-family: "Roboto", sans-serif;
+            font-size: 13px;
+            text-transform: capitalize;
+        }
     }
 }
 

@@ -4,6 +4,13 @@ declare module "vue/types/vue" {
     // 3. Declare augmentation for Vue
     interface Vue {
         getBackgroundList: any;
+        getData: {
+            data: {
+                accounts: {
+                    animation_service: boolean;
+                };
+            };
+        };
     }
 }
 

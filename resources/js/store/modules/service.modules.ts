@@ -89,6 +89,28 @@ const actions = {
             maxBodyLength: 2000,
             validateStatus: (status: number) => status >= 200 && status < 300
         });
+    },
+    async activeAnimationService(
+        { commit }: any,
+        args: { id: number; active: boolean }
+    ) {
+        return await axios.post(`/api/v1/service/active/${args.id}`, args, {
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Methods": "POST",
+                "Access-Control-Allow-Headers":
+                    "Content-Type, Origin, Accepted, X-Requested-With, Authorization",
+                "Access-Control-Allow-Origin": "*",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            },
+            timeout: 856000,
+            responseType: "json",
+            withCredentials: true,
+            maxRedirects: 5,
+            maxContentLength: 2000,
+            maxBodyLength: 2000,
+            validateStatus: (status: number) => status >= 200 && status < 300
+        });
     }
 };
 const mutations = {};

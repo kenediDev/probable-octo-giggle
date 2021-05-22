@@ -212,6 +212,6 @@ class AuthController extends Controller
                 # code...
                 break;
         }
-        return response()->json(['message' => $message], 200);
+        return response()->json(['message' => $message, 'results' => $auth], 200);
     }
 }

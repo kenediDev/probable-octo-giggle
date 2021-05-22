@@ -17,6 +17,7 @@ export interface Accounts {
     logo: string;
     background: Background[];
     title_service?: string;
+    animation_service: boolean;
 }
 
 export interface Service {

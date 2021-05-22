@@ -140,6 +140,28 @@ const actions = {
             maxRedirects: 5,
             validateStatus: (status: number) => status >= 200 && status < 300
         });
+    },
+    async activeAnimation(
+        { commit }: any,
+        args: { type: string; active: boolean }
+    ) {
+        return await axios.post("/api/v1/auth/animation/", args, {
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Methods": "POST",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers":
+                    "Content-Type, Origin, Accepted, X-Requested-With, Authorization",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            },
+            timeout: 865000,
+            responseType: "json",
+            withCredentials: true,
+            maxBodyLength: 2000,
+            maxContentLength: 2000,
+            maxRedirects: 5,
+            validateStatus: (status: number) => status >= 200 && status < 300
+        });
     }
 };
 const mutations = {
@@ -181,6 +203,10 @@ const mutations = {
     },
     updateProfile: (results: UserState, args: User) => {
         results.data.accounts.logo = args.accounts.logo;
+    },
+    updateActiveProfile: (results: UserState, args: User) => {
+        results.data.accounts.animation_service =
+            args.accounts.animation_service;
     },
     // Service Crud
     createService: (results: UserState, args: Service) => {
