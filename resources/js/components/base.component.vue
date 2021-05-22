@@ -27,6 +27,9 @@
       :nameTitle="name"
       v-on:retrieveTitle="retrieveTitle($event)"
       v-on:changeName="changeName($event)"
+      :choiceScreen="choiceScreen"
+      v-on:clickChoiceScreen="clickChoiceScreen($event)"
+      v-on:clickModalInformation="clickModalInformation($event)"
     ></router-view>
     <msg :message="message" />
     <progress_ :message="message" />
@@ -55,6 +58,17 @@
       :type="type"
       v-on:changeName="changeName($event)"
     />
+    <modalsInformation
+      :modalInformation="modalInformation"
+      v-on:openModalsInformation="openModalsInformation($event)"
+      :title="name"
+      :child_title="title"
+      :description="description"
+      v-on:changeTitle="changeTitle($event)"
+      v-on:changeName="changeName($event)"
+      v-on:changeDescription="changeDescription($event)"
+      v-on:clearInput="clearInput()"
+    />
   </div>
 </template>
 
@@ -68,6 +82,7 @@ import { mapGetters } from "vuex";
 import modalsNotification from "./attribute/modals.screen.vue";
 import modalsProfile from "./attribute/modals.profile-edit.vue";
 import modalsTitle from "./attribute/modals.title.vue";
+import modalsInformation from "./attribute/modals.information.vue";
 
 @Component({
   components: {
@@ -77,6 +92,7 @@ import modalsTitle from "./attribute/modals.title.vue";
     modalsNotification,
     modalsProfile,
     modalsTitle,
+    modalsInformation,
   },
   computed: {
     ...mapGetters(["message", "me"]),
@@ -109,6 +125,36 @@ export default class BaseComponent extends Vue {
 
   // Another
   type: string = "service";
+
+  // Choice Screen
+  choiceScreen: string = "information";
+  modalInformation: number = 0;
+
+  clickModalInformation(args: {
+    title: string;
+    child_title: string;
+    description: string;
+  }) {
+    this.modalInformation = 1;
+    this.name = args.title;
+    this.title = args.child_title;
+    this.description = args.description;
+    console.log(this.name, this.title, this.description);
+  }
+
+  openModalsInformation() {
+    if (!this.modalInformation) {
+      this.modalInformation = 1;
+    } else if (this.modalInformation === 1) {
+      this.modalInformation = 2;
+    } else {
+      this.modalInformation = 1;
+    }
+  }
+
+  clickChoiceScreen(args: string) {
+    this.choiceScreen = args;
+  }
 
   clickModalsTitle() {
     if (!this.modalsTitle_) {
@@ -189,6 +235,7 @@ export default class BaseComponent extends Vue {
     this.photo = "";
     this.title = "";
     this.formUpdate = false;
+    this.modalInformation = 0;
   }
 
   clickModalUpdateProfile(args: {

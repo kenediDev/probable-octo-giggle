@@ -1,27 +1,42 @@
 <template>
   <div>
     <div class="cover_information">
-      <div class="grids">
+      <div class="grids" :id="active === 'information' ? 'grids-unactive' : ''">
         <div
           class="cols"
+          :id="active === 'information' ? 'active-cols' : ''"
           :style="
             'background-image:url(' +
             'https://www.mynrma.com.au/-/media/car-servicing/nrma-car-service-app.jpg?h=360&w=640&hash=f5e334365f5a22383956a0f9d914081a' +
             ')'
           "
-        ></div>
+        >
+          <div v-if="active === 'information'" class="groups">
+            <button>
+              <icon :src="upload" class="icon" />
+            </button>
+          </div>
+        </div>
         <div class="cols">
-          <div class="title">WELCOME TO AUTOREPAIR</div>
+          <div class="title">
+            {{ me.accounts.cover_information.title }}
+            <button
+              @click="
+                clickModalInformation(
+                  me.accounts.cover_information.title,
+                  me.accounts.cover_information.child_title,
+                  me.accounts.cover_information.description
+                )
+              "
+            >
+              <icon :src="edit" class="icon" />
+            </button>
+          </div>
           <div class="child-title">
-            We help more than 45 years serving customer car
+            {{ me.accounts.cover_information.child_title }}
           </div>
           <p>
-            Far far away, behind the word mountains, far from the countries
-            Vokalia and Consonantia, there live the blind texts. Separated they
-            live in Bookmarksgrove right at the coast of the Semantics, a large
-            language ocean. A small river named Duden flows by their place and
-            supplies it with the necessary regelialia. It is a paradisematic
-            country, in which roasted parts of sentences fly into your mouth.
+            {{ me.accounts.cover_information.description }}
           </p>
           <div class="group">
             <button>Misi kita</button>
@@ -43,10 +58,46 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Emit, Prop } from "vue-property-decorator";
+import upload from "../../assets/image.svg";
+import edit from "../../assets/edit.svg";
+import { User } from "../../../store/types/interface";
 
 @Component({})
-export default class CoverInformation extends Vue {}
+export default class CoverInformation extends Vue {
+  @Prop(Object) me: User;
+
+  active: string = "";
+  upload = upload;
+  edit = edit;
+
+  @Emit()
+  clickModalInformation(
+    title: string,
+    child_title: string,
+    description: string
+  ) {
+    this.$emit("clickModalInformation", {
+      title: title,
+      child_title: child_title,
+      description: description,
+    });
+  }
+
+  beforeMount() {
+    if (this.$route.name === "dashboard") {
+      this.active = "information";
+    }
+  }
+
+  beforeUpdate() {
+    if (this.$route.name === "dashboard") {
+      this.active = "information";
+    } else {
+      this.active = "information";
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

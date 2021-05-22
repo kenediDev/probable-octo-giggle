@@ -164,16 +164,25 @@
           </div>
         </div>
         <!-- Service -->
-        <service
-          :service="me.service"
-          v-if="me"
-          :me="me"
-          v-on:updateService="updateService($event)"
-          v-on:updateTitle="updateTitle($event)"
-          :nameTitle="nameTitle"
-          v-on:retrieveTitle="retrieveTitle($event)"
-          v-on:changeName="changeName($event)"
-        />
+        <div v-if="choiceScreen === 'service'">
+          <service
+            :service="me.service"
+            v-if="me"
+            :me="me"
+            v-on:updateService="updateService($event)"
+            v-on:updateTitle="updateTitle($event)"
+            :nameTitle="nameTitle"
+            v-on:retrieveTitle="retrieveTitle($event)"
+            v-on:changeName="changeName($event)"
+          />
+        </div>
+        <div v-else-if="choiceScreen === 'information'">
+          <information
+            v-if="me.accounts"
+            :me="me"
+            v-on:clickModalInformation="clickModalInformation($event)"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -192,11 +201,13 @@ import profile from "./profile.component.vue";
 import service from "./product.component.vue";
 import { User } from "../../../store/types/interface";
 import times from "../../assets/cancel.svg";
+import information from "./cover_information.component.vue";
 
 @Component({
   components: {
     profile,
     service,
+    information,
   },
   data() {
     return {
@@ -235,6 +246,7 @@ import times from "../../assets/cancel.svg";
   },
 })
 export default class ColumnRight extends Vue {
+  @Prop(String) choiceScreen: string;
   times = times;
   @Prop(Object) me: User;
   $store: any;
@@ -269,8 +281,17 @@ export default class ColumnRight extends Vue {
   @Prop(String) nameTitle: string;
 
   @Emit()
+  clickModalInformation(args: {
+    title: string;
+    child_title: string;
+    description: string;
+  }) {
+    this.$emit("clickModalInformation", args);
+  }
+
+  @Emit()
   changeName(args) {
-    this.$emit("changeName", args)
+    this.$emit("changeName", args);
   }
 
   @Emit()
@@ -437,7 +458,7 @@ export default class ColumnRight extends Vue {
             message: res.data.message,
             valid: 1,
           });
-          this.$store.commit("createService", res.data.results)
+          this.$store.commit("createService", res.data.results);
         })
         .catch((err) => {
           if (!Boolean(err.response.data)) {

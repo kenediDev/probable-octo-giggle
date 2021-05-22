@@ -9,25 +9,51 @@
           <div class="drawer-list">
             <h5>Dashboard</h5>
             <div class="drawer-sub-list">
-              <a href="#" class="active">
+              <a
+                @click="clickChoiceScreen('information')"
+                href="#"
+                :class="choiceScreen === 'information' ? 'active' : 'unactive'"
+              >
+                <div class="box-icon">
+                  <icon :src="paper" class="icon" />
+                </div>
+                <span>List Informasi</span>
+              </a>
+              <a
+                @click="clickChoiceScreen('album')"
+                href="#"
+                :class="choiceScreen === 'album' ? 'active' : 'unactive'"
+              >
                 <div class="box-icon">
                   <icon :src="album" class="icon" />
                 </div>
                 <span>Album</span>
               </a>
-              <a href="#" class="unactive">
+              <a
+                @click="clickChoiceScreen('service')"
+                href="#"
+                :class="choiceScreen === 'service' ? 'active' : 'unactive'"
+              >
                 <div class="box-icon">
                   <icon :src="service" class="icon" />
                 </div>
                 <span>Service</span>
               </a>
-              <a href="#" class="unactive">
+              <a
+                @click="clickChoiceScreen('vision')"
+                href="#"
+                :class="choiceScreen === 'vision' ? 'active' : 'unactive'"
+              >
                 <div class="box-icon">
                   <icon :src="vision" class="icon" />
                 </div>
                 <span>Visi</span>
               </a>
-              <a href="#" class="unactive">
+              <a
+                @click="clickChoiceScreen('testimoni')"
+                href="#"
+                :class="choiceScreen === 'testimoni' ? 'active' : 'unactive'"
+              >
                 <div class="box-icon">
                   <icon :src="testimonials" class="icon" />
                 </div>
@@ -102,6 +128,8 @@
           :nameTitle="nameTitle"
           v-on:retrieveTitle="retrieveTitle($event)"
           v-on:changeName="changeName($event)"
+          :choiceScreen="choiceScreen"
+          v-on:clickModalInformation="clickModalInformation($event)"
         />
       </div>
     </div>
@@ -121,6 +149,7 @@ import search from "../assets/search.svg";
 import clock from "../assets/digital-clock.svg";
 import columnright from "./component/column-right.component.vue";
 import { User } from "../../store/types/interface";
+import paper from "../assets/contract.svg";
 
 @Component({
   components: {
@@ -128,6 +157,13 @@ import { User } from "../../store/types/interface";
   },
 })
 export default class DashboardComponent extends Vue {
+  // Screen
+  @Prop(String) choiceScreen: string;
+  @Emit()
+  clickChoiceScreen(args: string) {
+    this.$emit("clickChoiceScreen", args);
+  }
+  //
   @Prop(Object) me: User;
   @Prop(String) logo: string;
   service = service;
@@ -138,6 +174,7 @@ export default class DashboardComponent extends Vue {
   author = author;
   search = search;
   clock = clock;
+  paper = paper;
 
   // Service Form
   @Prop(Number) id: number;
@@ -149,6 +186,15 @@ export default class DashboardComponent extends Vue {
   // Another
   @Prop(String) type: string;
   @Prop(String) nameTitle: string;
+
+  @Emit()
+  clickModalInformation(args: {
+    title: string;
+    child_title: string;
+    description: string;
+  }) {
+    this.$emit("clickModalInformation", args);
+  }
 
   @Emit()
   changeName(args) {
